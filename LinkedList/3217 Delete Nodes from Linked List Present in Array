@@ -1,0 +1,74 @@
+/*
+https://leetcode.com/problems/delete-nodes-from-linked-list-present-in-array/description/?envType=problem-list-v2&envId=linked-list
+
+You are given an array of integers nums and the head of a linked list. Return the head of the modified linked list after removing all nodes from the linked list that have a value that exists in nums.
+
+Input: nums = [1,2,3], head = [1,2,3,4,5]
+Output: [4,5]
+Remove the nodes with values 1, 2, and 3.
+
+Input: nums = [1], head = [1,2,1,2,1,2]
+Output: [2,2,2]
+Remove the nodes with value 1.
+
+Input: nums = [5], head = [1,2,3,4]
+Output: [1,2,3,4]
+No node has value 5.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* modifiedList_1(vector<int>& nums, ListNode* head) {
+        // add all array elements to set to avoid multiple array search
+        unordered_set<int> st(nums.begin(), nums.end());
+        ListNode *dummy = new ListNode(0);
+        dummy->next = head;
+
+        ListNode* cur = dummy;
+        while (cur->next) {
+            if (st.count(cur->next->val)) {
+                //ListNode *temp = cur->next;
+                cur->next = cur->next->next;
+                //delete temp;
+            } else
+                cur = cur->next;
+        }
+        return dummy->next;
+    }
+
+    ListNode* modifiedList_2(vector<int>& nums, ListNode* head) {
+        unordered_set<int> st(begin(nums), end(nums));
+
+        while (head != NULL && st.find(head->val) != st.end()) {
+            //ListNode *temp = head;
+            head = head->next;
+            //delete (temp);
+        }
+
+        ListNode *cur = head;
+        while (cur && cur->next) {
+            if (st.find(cur->next->val) != st.end()) {
+                //ListNode *temp = cur->next;
+                cur->next = cur->next->next;
+                //delete (temp);
+            } else
+                cur = cur->next;
+        }
+        return head;
+    }
+
+    ListNode* modifiedList(vector<int>& nums, ListNode* head) {
+        return modifiedList_1(nums, head);
+        //return modifiedList_2(nums, head);
+    }
+};
