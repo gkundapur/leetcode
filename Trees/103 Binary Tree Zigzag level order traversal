@@ -1,0 +1,231 @@
+/*
+https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/description/?envType=problem-list-v2&envId=tree
+
+Given the root of a binary tree, return the zigzag level order traversal of its nodes' values. (i.e., from left to right, then right to left for the next level and alternate between).
+
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[20,9],[15,7]]
+
+Input: root = [1]
+Output: [[1]]
+
+Input: root = []
+Output: []
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int height(TreeNode *root) {
+        if (root == NULL)
+            return 0;
+        return 1 + max(height(root->left), height(root->right));
+    }
+
+    void printCurrentLevel(TreeNode *root, int level, bool ltr, vector<vector<int>>& result) {
+        if (root == NULL)
+            return;
+
+        vector<int> v;
+        if (level == 0) {           
+            v.push_back(root->val);            
+        } else if (level > 0) {
+            if (ltr == true) {
+                printCurrentLevel(root->left, level-1, ltr, result);
+                printCurrentLevel(root->right, level-1, ltr, result);
+            } else {
+                printCurrentLevel(root->right, level-1, ltr, result);
+                printCurrentLevel(root->left, level-1, ltr, result);
+            }
+        }
+        if (v.size() != 0)
+            result.push_back(v);        
+    }
+    
+    vector<vector<int>> zigzagLevelOrder_rec(TreeNode *root) {
+        if (root == NULL)
+            return {};
+
+        bool ltr = false; // true = left to right, false = right to left
+        vector<vector<int>> result;
+        int h = height(root);
+        for (int i = 0; i < h; i++) {
+            printCurrentLevel(root, i, ltr, result);
+            ltr = !ltr;
+        }
+        return result;
+    }
+
+
+    vector<vector<int>> zigzagLevelOrder_stacks(TreeNode *root) {
+        stack<TreeNode*> s1;
+        stack<TreeNode*> s2;
+        vector<vector<int>> result;
+        
+        if (root == NULL)
+            return result;
+
+        s1.push(root);
+        TreeNode *cur = NULL;
+        while (!s1.empty() || !s2.empty()) {
+            vector<int> levelnodes1;
+            while (!s1.empty()) {
+                cur = s1.top();
+                s1.pop();
+                cout << "s1: cur->val = " << cur->val << endl;            
+                levelnodes1.push_back(cur->val);
+                if (cur->left)
+                    s2.push(cur->left);
+                if (cur->right)
+                    s2.push(cur->right);
+            }
+            if (levelnodes1.size() > 0)
+                result.push_back(levelnodes1);
+            //levelnodes.clear();        
+            vector<int> levelnodes2;
+            while (!s2.empty()) {
+                cur = s2.top();
+                s2.pop();
+                levelnodes2.push_back(cur->val);
+                cout << "s2: cur->val: " << cur->val << endl;
+                if (cur->right)
+                    s1.push(cur->right);
+                if (cur->left)
+                    s1.push(cur->left);
+
+            }
+
+            if (levelnodes2.size() > 0)
+                result.push_back(levelnodes2);            
+        }
+        return result;        
+    }
+    
+    vector<vector<int>> zigzagLevelOrder_q(TreeNode *root) {
+        if (root == NULL)
+            return {};
+
+        queue<TreeNode *> q;
+        vector<vector<int>> result;
+        bool ltr = true;  //true: left to right, false: right to left
+
+        q.push(root);
+        while (!q.empty()) {
+            vector<int> levelnodes;
+            int n = q.size();
+            while (n--) {
+                TreeNode *node = q.front();
+                q.pop();
+
+                if (ltr)
+                    levelnodes.push_back(node->val);
+                else
+                    levelnodes.insert(levelnodes.begin(), node->val);
+                
+                if (node->left)
+                    q.push(node->left);
+                if (node->right)
+                   q.push(node->right);             
+            }
+            result.push_back(levelnodes);
+            ltr = !ltr;
+        }
+        return result;
+    }
+
+    vector<vector<int>> zigzagLevelOrder_que_stack(TreeNode *root) {
+        if (root == NULL)
+            return {};
+
+        queue<TreeNode *> q;
+        stack<TreeNode *> st;
+        vector<vector<int>> result;
+        bool ltr = true;
+
+        q.push(root);
+        while (!q.empty()) {
+            vector<int> levelnodes;
+            int n = q.size();
+            while (n--) {
+                TreeNode *node = q.front();
+                q.pop();
+
+                if (ltr == true)
+                    levelnodes.push_back(node->val);
+                else
+                    st.push(node);
+
+                if (node->left)
+                    q.push(node->left);
+                if (node->right)
+                    q.push(node->right);
+            }
+
+            if (ltr == false) {
+                while (!st.empty()) {
+                    TreeNode *node = st.top();
+                    st.pop();
+                    levelnodes.push_back(node->val);
+                }
+            }
+            result.push_back(levelnodes);
+            ltr = !ltr;            
+        }
+        return result;
+    }
+
+    vector<vector<int>> zigzagLevelOrder_deque(TreeNode *root) {
+        if (root == NULL)
+            return {};
+
+        deque<TreeNode *> dq;        
+        vector<vector<int>> result;
+        bool ltr = true;
+
+        dq.push_back(root);
+        while (!dq.empty()) {
+            vector<int> levelnodes;
+            int n = dq.size();
+            while (n--) {             
+                if (ltr == true) {
+                    TreeNode *node = dq.front();
+                    dq.pop_front();                
+                    levelnodes.push_back(node->val);
+                    if (node->left)
+                        dq.push_back(node->left);
+                    if (node->right)
+                        dq.push_back(node->right);
+                } else {
+                    TreeNode *node = dq.back();
+                    dq.pop_back();
+                    levelnodes.push_back(node->val);
+                    if (node->right)
+                        dq.push_front(node->right);
+                    if (node->left)
+                        dq.push_front(node->left);
+                }
+            }
+            result.push_back(levelnodes);
+            ltr = !ltr;            
+        }
+        return result;
+    }
+
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        //return zigzagLevelOrder_rec(root);
+        //return zigzagLevelOrder_stacks(root);
+        //return zigzagLevelOrder_q(root);
+        //return zigzagLevelOrder_que_stack(root);
+        return zigzagLevelOrder_deque(root);
+    }
+};
