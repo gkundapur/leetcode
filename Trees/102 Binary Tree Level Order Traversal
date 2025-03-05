@@ -1,0 +1,99 @@
+/*
+https://leetcode.com/problems/binary-tree-level-order-traversal/description/?envType=problem-list-v2&envId=tree
+
+Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
+
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[9,20],[15,7]]
+
+Input: root = [1]
+Output: [[1]]
+
+Input: root = []
+Output: []
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder_bfs(TreeNode *root) {
+        if (root == NULL)
+            return {};
+
+        vector<vector<int>> result;        
+        queue<TreeNode *> q;
+        q.push(root);
+        while (!q.empty()) {
+            int n = q.size();
+            vector<int> v;
+            while (n--) {
+                TreeNode *node = q.front();
+                q.pop();
+                v.push_back(node->val);
+                if (node->left)
+                    q.push(node->left);
+                if (node->right)
+                    q.push(node->right);                    
+            }
+            result.push_back(v);            
+        }
+        return result;
+    }
+
+    int height(TreeNode *root) {
+        if (root == NULL)
+            return 0;
+        return 1 + max(height(root->left), height(root->right));
+    }
+
+    void printCurrentLevel(TreeNode *root, int level, vector<vector<int>>& result) {
+        if (root == NULL)
+            return;
+
+         vector<int> v;
+        if (level == 0) {           
+            v.push_back(root->val);            
+        } else if (level > 0) {
+            printCurrentLevel(root->left, level-1, result);
+            printCurrentLevel(root->right, level-1, result);
+        }
+        result.push_back(v);
+        v.clear();
+    }
+
+    void printCurrentLevel_rec(TreeNode *root, int level, vector<vector<int>>& result) {
+        int h = height(root);
+        for (int i = 0; i < h; i++)
+            printCurrentLevel(root, i, result);
+    }
+
+    void levelOrder_dfs(TreeNode *root, int level, vector<vector<int>>& result) {
+        if (root == NULL)
+            return;
+        
+        if (result.size() == level)
+            result.push_back({});
+
+        result[level].push_back(root->val);
+        
+        levelOrder_dfs(root->left, level+1, result);
+        levelOrder_dfs(root->right, level+1, result);
+    }
+
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        //return levelOrder_bfs(root);
+        vector<vector<int>> result;
+        levelOrder_dfs(root, 0, result);
+        return result;
+    }
+};
