@@ -1,0 +1,71 @@
+/*
+https://leetcode.com/problems/intersection-of-two-linked-lists/description/?envType=problem-list-v2&envId=linked-list
+
+Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect. If the two linked lists have no intersection at all, return null.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int findlen(ListNode *head) {
+        int len = 0;
+        while (head) {
+            len++;
+            head = head->next;
+        }
+        return len;
+    }
+
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if (headA == NULL || headB == NULL)
+            return NULL;
+
+        if (headA == headB)
+            return headA;
+
+        ListNode *pA = headA;
+        ListNode *pB = headB;
+
+        while (pA != pB) {
+            pA = pA == NULL ? headB : pA->next;
+            pB = pB == NULL ? headA : pB->next;
+        }
+        return pA;
+#if 0
+        int lenA = findlen(headA);
+        int lenB = findlen(headB);
+
+        ListNode *head1, *head2;
+        if (lenA > lenB) {
+            head1 = headA;
+            head2 = headB;
+        } else if (lenA < lenB) {
+            head1 = headB;
+            head2 = headA;
+        }
+
+        int diff = lenA > lenB ? lenA - lenB : lenB - lenA;
+        for (int i = 0; i < diff; i++)
+            head1 = head1->next;
+
+        while (head1 && head2) {
+            if (head1 == head2)
+                return head1;
+            head1 = head1->next;
+            head2 = head2->next;
+
+        }
+        return NULL;        
+#endif 
+    }
+};
+
+
+
