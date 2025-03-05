@@ -1,0 +1,83 @@
+/*
+https://leetcode.com/problems/remove-nodes-from-linked-list/description/?envType=problem-list-v2&envId=linked-list
+
+You are given the head of a linked list.
+
+Remove every node which has a node with a greater value anywhere to the right side of it.
+
+Return the head of the modified linked list.
+
+Input: head = [5,2,13,3,8]
+Output: [13,8]
+Explanation: The nodes that should be removed are 5, 2 and 3.
+- Node 13 is to the right of node 5.
+- Node 13 is to the right of node 2.
+- Node 8 is to the right of node 3.
+
+Input: head = [1,1,1,1]
+Output: [1,1,1,1]
+Explanation: Every node has value 1, so no nodes are removed.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    // traverse from right to left using stack
+    // returns new list not the modified list
+    ListNode* removeZeroSumSublists_1(ListNode* head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+
+        stack<ListNode *> st;
+        ListNode *cur = head;
+        while (cur) {
+            st.push(cur);
+            cur = cur->next;
+        }
+
+        cur = st.top();
+        st.pop();
+        int max = cur->val;
+        ListNode *res = new ListNode(cur->val);
+        while (!st.empty()) {
+            cur = st.top();
+            st.pop();
+            if (cur->val >= max) {
+                ListNode *temp = new ListNode(cur->val);
+                temp->next = res;
+                res = temp;
+                max = cur->val;
+            }
+        }
+        return res;
+    }
+
+    ListNode* removeZeroSumSublists_2(ListNode* head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+
+        ListNode *temp = removeZeroSumSublists_2(head->next);
+        if (head->val < temp->val) {
+            //delete head;
+            return temp;
+        }
+
+        head->next = temp;
+        return head;
+    }
+
+    ListNode* removeNodes(ListNode* head) {
+        //return removeZeroSumSublists_1(head);
+        return removeZeroSumSublists_2(head);
+        
+    }
+};
