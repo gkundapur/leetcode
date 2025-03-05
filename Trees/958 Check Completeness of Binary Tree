@@ -1,0 +1,78 @@
+/*
+https://leetcode.com/problems/check-completeness-of-a-binary-tree/description/?envType=problem-list-v2&envId=tree
+
+Given the root of a binary tree, determine if it is a complete binary tree.
+In a complete binary tree, every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. 
+It can have between 1 and 2h nodes inclusive at the last level h.
+
+Input: root = [1,2,3,4,5,6]
+Output: true
+Explanation: Every level before the last is full (ie. levels with node-values {1} and {2, 3}), and all nodes in the last level ({4, 5, 6}) are as far left as possible.
+
+Input: root = [1,2,3,4,5,null,7]
+Output: false
+Explanation: The node with value 7 isn't as far left as possible.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isCompleteTree_bfs(TreeNode *root) {
+        queue<TreeNode *> que;
+        bool null_in_past = false;
+
+        que.push(root);
+        while (!que.empty()) {
+            TreeNode *node = que.front();
+            que.pop();
+
+            if (node == NULL)
+                null_in_past = true;
+            else {
+                if (null_in_past == true)
+                    return false;
+                que.push(node->left);
+                que.push(node->right);
+            }            
+        }
+        return true;
+    }
+
+    int countNodes(TreeNode *root) {
+        if (root == NULL)
+            return 0;
+        return 1 + countNodes(root->left) + countNodes(root->right);
+    }
+
+    bool isCompleteTree_dfs(TreeNode *root, int i, int totalNodes) {
+        if (root == NULL)
+            return true;
+
+        if (i >= totalNodes)
+            return false;
+
+        return isCompleteTree_dfs(root->left, 2*i+1/* root's left child*/, totalNodes) &&
+                isCompleteTree_dfs(root->right, 2*i+2/* root's right child */, totalNodes);
+    }
+
+    
+    bool isCompleteTree(TreeNode* root) {
+        //return isCompleteTree_bfs(root);   // bfs
+
+        // dfs
+        int totalNodes = countNodes(root);
+        return isCompleteTree_dfs(root, 0, totalNodes);
+
+
+    }
+};
