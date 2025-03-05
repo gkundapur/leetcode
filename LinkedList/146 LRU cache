@@ -1,0 +1,155 @@
+/*
+https://leetcode.com/problems/lru-cache/description/?envType=problem-list-v2&envId=linked-list
+
+Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+Implement the LRUCache class:
+
+LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+int get(int key) Return the value of the key if the key exists, otherwise return -1.
+void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, 
+evict the least recently used key.
+The functions get and put must each run in O(1) average time complexity.
+
+ 
+
+Example 1:
+
+Input
+["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]
+[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
+Output
+[null, null, null, 1, null, -1, null, -1, 3, 4]
+
+Explanation
+LRUCache lRUCache = new LRUCache(2);
+lRUCache.put(1, 1); // cache is {1=1}
+lRUCache.put(2, 2); // cache is {1=1, 2=2}
+lRUCache.get(1);    // return 1
+lRUCache.put(3, 3); // LRU key was 2, evicts key 2, cache is {1=1, 3=3}
+lRUCache.get(2);    // returns -1 (not found)
+lRUCache.put(4, 4); // LRU key was 1, evicts key 1, cache is {4=4, 3=3}
+lRUCache.get(1);    // return -1 (not found)
+lRUCache.get(3);    // return 3
+lRUCache.get(4);    // return 4
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+typedef struct Node {
+    int key;
+    int val;
+    Node *next;
+    Node *prev;
+
+    Node(int k, int v) : key(k), val(v), next(NULL), prev(NULL){}
+} Node_t;
+
+#if 0
+class LRUCache {
+public:
+    int cap;
+    list<int> el;
+    unordered_map<int,int> m;
+    LRUCache(int capacity) {
+        cap=capacity;
+    }
+
+    int get(int key) {
+        if(m.find(key)==m.end())
+            return -1;
+        el.remove(key);
+        el.push_back(key);
+        return m[key];
+
+    }
+
+    void put(int key, int value)
+    {
+        if(m.find(key)!=m.end())
+        {
+            el.remove(key);
+            m.erase(key);
+        }
+        if(el.size()==cap)
+        {
+            int temp = el.front();
+            el.pop_front();
+            m.erase(temp);
+        }
+        m[key] = value;
+        el.push_back(key);
+    }
+};
+#endif
+
+class LRUCache {
+    int n;
+    unordered_map<int, Node_t *> cache;
+    Node *head;
+    Node *tail;
+public:
+    LRUCache(int capacity) {
+        n = capacity;
+        head = new Node_t(-1, -1);
+        tail = new Node_t(-1, -1);
+        head->next = tail;
+        tail->prev = head;
+    }
+    
+    void add(Node_t *newnode) {
+        Node_t *nextnode = head->next;
+        head->next = newnode;
+        newnode->prev = head;
+        newnode->next = nextnode;
+        nextnode->prev = newnode;
+    }
+
+    void remove(Node_t *node) {
+        Node_t *prev = node->prev;
+        Node_t *next = node->next;
+        prev->next = next;
+        next->prev = prev;
+        //delete node; 
+    }
+
+    int get(int key) {
+        if (cache.find(key) == cache.end()) {
+            // not found in cache
+            return -1;
+        }
+
+        // found in cache map
+        Node_t *node = cache[key];
+        remove(node);  // remove it from the cache
+        add(node);     // add at the begining to make it more recent   
+        return node->val;  
+    }
+    
+    void put(int key, int value) {
+        if (cache.find(key) != cache.end()) {
+            // found in cache
+            Node_t *node = cache[key];
+            remove(node); 
+            delete node;           
+        }
+
+        Node_t *node = new Node_t(key, value);
+        cache[key] = node;
+        add(node);
+
+        // if cache size exceeds its capacity
+        if (cache.size() > n) {
+            // remove last entry from the cache
+            Node_t *node_tobe_deleted = tail->prev;
+            remove(node_tobe_deleted);
+            cache.erase(node_tobe_deleted->key);
+            delete node_tobe_deleted;
+        }   
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
