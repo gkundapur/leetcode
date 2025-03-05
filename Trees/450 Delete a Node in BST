@@ -1,0 +1,142 @@
+/*
+https://leetcode.com/problems/delete-node-in-a-bst/description/?envType=problem-list-v2&envId=tree
+
+Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.
+
+Basically, the deletion can be divided into two stages:
+
+Search for a node to remove.
+If the node is found, delete the node.
+
+Input: root = [5,3,6,2,4,null,7], key = 3
+Output: [5,4,6,2,null,null,7]
+Explanation: Given key to delete is 3. So we find the node with value 3 and delete it.
+One valid answer is [5,4,6,2,null,null,7], shown in the above BST.
+Please notice that another valid answer is [5,2,6,null,4,null,7] and it's also accepted.
+
+Input: root = [5,3,6,2,4,null,7], key = 0
+Output: [5,3,6,2,4,null,7]
+Explanation: The tree does not contain a node with value = 0.
+
+Input: root = [], key = 0
+Output: []
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode *deleteNode_iterative(TreeNode *root, int key) {
+        TreeNode *cur, *parent;
+
+        parent = NULL;
+        cur = root;
+        while (cur != NULL && cur->val != key) {
+            parent = cur;
+            cur = key < cur->val ? cur->left : cur->right;
+        }
+
+        if (cur == NULL) {
+            cout << "not found" << endl;
+            return root; // not found
+        }
+
+        // case 1: Node without any children i.e no left child and no right child
+        if (cur->left == NULL && cur->right == NULL) {
+            if (parent->left == cur)
+                parent->left = NULL;
+            else
+                parent->right = NULL;
+            cout << "deleted " << cur->val << endl;
+            delete cur;
+        }
+
+        // case 2: Node with one child i.e either left or right child
+        else if (cur->left != NULL && cur->right == NULL) {
+            if (parent->left == cur)
+                parent->left = cur->left;
+            else
+                parent->right = cur->right;
+            cout << "case 2a: deleted " << cur->val << endl;
+            delete cur;
+        } else if (cur->left == NULL && cur->right != NULL) {
+            if (parent->left == cur)
+                parent->left = cur->right;
+            else
+                parent->right = cur->left;
+            cout << "case 2b: deleted " << cur->val << endl;
+            delete cur;
+        }
+
+        // case 3: Delete node with 2 children
+        else if (cur->left != NULL && cur->right != NULL) {
+            TreeNode *succParent, *succ;
+
+            succParent = cur;
+            succ = cur->right;
+            while (succ->left != NULL) {
+                succParent = succ;
+                succ = succ->left;
+            }
+
+            if (succParent->left == succ)
+                succParent->left = NULL;
+            else
+                succParent->right = NULL;
+            
+            cout << "case 3: replacing: " << cur->val << " with " << succ->val << endl;
+            cur->val = succ->val;
+            cout << "case 3: deleted " << succ->val << endl;
+            delete succ;
+        }
+        return root;
+    }
+
+    TreeNode* deleteNode_recursive(TreeNode* root, int key) {
+        if (root == NULL)
+            return NULL;
+
+        if (key < root->val)
+            root->left = deleteNode_recursive(root->left, key);
+        else if (key > root->val)
+            root->right = deleteNode_recursive(root->right, key);
+        else { // key == root->val            
+            if (root->left == NULL && root->right == NULL) {
+                // case 1: No child
+                cout << "case 1: deleted " << root->val << endl;
+                delete root;
+                return NULL;
+            } else if (root->left == NULL || root->right == NULL) {
+                // case 2: 1 child
+                TreeNode *temp = root->left ? root->left : root->right;
+                cout << "case 2: deleted " << root->val << endl;
+                delete root;
+                return temp;
+            } else if (root->left != NULL && root->right != NULL) {
+                // case 3: 2 children
+                TreeNode *succ = root->right;
+                while (succ->left != NULL)
+                    succ = succ->left;
+                root->val = succ->val;
+                cout << "Case 3: deleting " << root->val << endl;
+                root->right = deleteNode_recursive(root->right, root->val);
+            }
+        }
+        return root;
+    }
+
+
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        //return deleteNode_iterative(root, key);
+        return deleteNode_recursive(root, key);        
+    }
+};
