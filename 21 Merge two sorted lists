@@ -1,0 +1,64 @@
+/*
+ * https://leetcode.com/problems/merge-two-sorted-lists/description/
+ * You are given the heads of two sorted linked lists list1 and list2.
+ * Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.
+ * Return the head of the merged linked list.
+ */
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *mergeTwoLists_rec(ListNode *list1, ListNode *list2) {
+            ListNode *result;
+        if (list1 == NULL && list2 == NULL)
+            return NULL;
+        if (list1 == NULL) return list2;
+        if (list2 == NULL) return list1;
+        
+        if (list1->val <= list2->val) {
+            result = list1;
+            result->next = mergeTwoLists(list1->next, list2);
+        } else {
+            result = list2;
+            result->next = mergeTwoLists(list1, list2->next);
+        }
+        
+        return result;
+    }
+
+    ListNode* mergeTwoLists_iter(ListNode* list1, ListNode* list2) {
+        ListNode *dummy = new ListNode(-1);
+        ListNode *temp = dummy;
+
+        while (list1 != NULL && list2 != NULL) {
+            if (list1->val <= list2->val) {
+                temp->next = list1;
+                list1 = list1->next;
+            } else {
+                temp->next = list2;
+                list2 = list2->next;
+            }
+            temp = temp->next;
+        }
+        if (list1 != NULL)
+            temp->next = list1;
+        if (list2 != NULL)
+            temp->next = list2;
+            
+        return dummy->next;
+    }
+
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        //return mergeTwoLists_rec(list1, list2);
+        return mergeTwoLists_iter(list1, list2);
+    }
+};
