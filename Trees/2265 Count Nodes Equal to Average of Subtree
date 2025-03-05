@@ -1,0 +1,85 @@
+/*
+https://leetcode.com/problems/count-nodes-equal-to-average-of-subtree/description/?envType=problem-list-v2&envId=tree
+
+Given the root of a binary tree, return the number of nodes where the value of the node is equal to the average of the values in its subtree.
+
+Note:
+
+The average of n elements is the sum of the n elements divided by n and rounded down to the nearest integer.
+A subtree of root is a tree consisting of root and all of its descendants.
+
+Input: root = [4,8,5,0,1,null,6]
+Output: 5
+Explanation: 
+For the node with value 4: The average of its subtree is (4 + 8 + 5 + 0 + 1 + 6) / 6 = 24 / 6 = 4.
+For the node with value 5: The average of its subtree is (5 + 6) / 2 = 11 / 2 = 5.
+For the node with value 0: The average of its subtree is 0 / 1 = 0.
+For the node with value 1: The average of its subtree is 1 / 1 = 1.
+For the node with value 6: The average of its subtree is 6 / 1 = 6.
+
+Input: root = [1]
+Output: 1
+Explanation: For the node with value 1: The average of its subtree is 1 / 1 = 1.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int findsum(TreeNode *root, int& count) {
+        if (root == NULL)
+            return 0;
+
+        count++;
+
+        return findsum(root->left, count) + findsum(root->right, count) + root->val;
+    }
+    void averageOfSubtree_bruteforce(TreeNode *root, int& result) {
+        if (root == NULL)
+            return;
+
+        int count = 0;
+        int totalSum = findsum(root, count);
+        int avg = totalSum/count;
+        if (root->val == avg)
+            result++;
+
+        averageOfSubtree_bruteforce(root->left, result);
+        averageOfSubtree_bruteforce(root->right, result);        
+    }
+
+    pair<int/*sum*/, int/*count*/> averageOfSubtree_efficient(TreeNode *root, int& result) {
+        if (root == NULL)
+            return {0, 0};
+
+        pair<int, int> leftside = averageOfSubtree_efficient(root->left, result);
+        pair<int, int> rightside = averageOfSubtree_efficient(root->right, result);
+
+        int totalSum = leftside.first + rightside.first + root->val;
+        int totalCount = leftside.second + rightside.second + 1;
+        int avg = totalSum / totalCount;
+
+        if (root->val == avg)
+            result++;
+
+        return {totalSum, totalCount};
+    }
+
+    int averageOfSubtree(TreeNode* root) {
+        int result = 0;
+
+        //averageOfSubtree_bruteforce(root, result); // O(n^2)
+        averageOfSubtree_efficient(root, result); // O(n)
+        return result;
+        
+    }
+};
