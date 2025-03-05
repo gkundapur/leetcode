@@ -1,0 +1,96 @@
+/*
+https://leetcode.com/problems/find-bottom-left-tree-value/description/?envType=problem-list-v2&envId=tree
+
+Given the root of a binary tree, return the leftmost value in the last row of the tree.
+
+Input: root = [2,1,3]
+Output: 1
+
+Input: root = [1,2,3,4,null,5,6,null,null,7]
+Output: 7
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    int max_depth; // for dfs
+    int bottomLeft; 
+public:
+
+    // left to right level by level
+    int findBottomLeftValue_bfs(TreeNode *root) {
+        if (root == NULL)
+            return 0;
+
+        queue<TreeNode *> q;
+        int bottomLeftValue = 0;
+
+        q.push(root);
+        while (!q.empty()) {
+            bottomLeftValue = q.front()->val;
+            int n = q.size();
+            while (n--) {
+                TreeNode *node = q.front();
+                q.pop();
+                if (node->left)
+                    q.push(node->left);
+                if (node->right)
+                    q.push(node->right);
+            }
+        }
+        return bottomLeftValue;
+    }
+
+    // right to left level by level - last node is the bottom left
+    int findBottomLeftValue_bfs1(TreeNode *root) {
+        if (root == NULL)
+            return 0;
+
+        queue<TreeNode *> q;
+        int bottomLeftValue = 0;
+        TreeNode *node;
+
+        q.push(root);
+        while (!q.empty()) {
+            node = q.front();
+            q.pop();
+            if (node->right)
+                q.push(node->right);
+            if (node->left)
+                q.push(node->left);
+        }
+
+        return node->val;
+    }
+
+    void findBottomLeftValue_dfs(TreeNode *root, int cur_depth) {
+        if (root == NULL)
+            return;
+
+        if (cur_depth > max_depth) {
+            max_depth = cur_depth;
+            bottomLeft = root->val;
+        }
+
+        findBottomLeftValue_dfs(root->left, cur_depth+1);
+        findBottomLeftValue_dfs(root->right, cur_depth+1);
+    }
+
+    int findBottomLeftValue(TreeNode* root) {
+        //return findBottomLeftValue_bfs(root);
+        return findBottomLeftValue_bfs1(root);
+
+        //max_depth = -1;
+        //findBottomLeftValue_dfs(root, 0/*root's depth*/);
+        //return bottomLeft;     
+    }
+};
