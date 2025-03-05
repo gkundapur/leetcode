@@ -1,0 +1,51 @@
+/*
+https://leetcode.com/problems/reverse-linked-list/description/?envType=problem-list-v2&envId=linked-list
+
+Given the head of a singly linked list, reverse the list, and return the reversed list.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList_iter(ListNode *head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+
+        ListNode *cur, *newHead;
+
+        newHead = NULL;
+        cur = head;
+        while (cur) {
+            ListNode *nextNode = cur->next;
+            cur->next = newHead;
+            newHead = cur;
+            cur = nextNode;
+        }
+        return newHead;
+    }
+
+    ListNode* reverseList_rec(ListNode *head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+
+        ListNode *lastNode = reverseList_rec(head->next);
+        head->next->next = head;
+        head->next = NULL;
+
+        return lastNode;
+    }
+    ListNode* reverseList(ListNode* head) {
+        return reverseList_iter(head);
+        //return reverseList_rec(head);
+        
+    }
+};
