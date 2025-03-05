@@ -1,0 +1,74 @@
+/*
+https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/description/?envType=problem-list-v2&envId=tree
+
+Given the root of a binary tree, find the maximum value v for which there exist different nodes a and b where v = |a.val - b.val| and a is an ancestor of b.
+
+A node a is an ancestor of b if either: any child of a is equal to b or any child of a is an ancestor of b.
+
+Input: root = [8,3,10,1,6,null,14,null,null,4,7,13]
+Output: 7
+Explanation: We have various ancestor-node differences, some of which are given below :
+|8 - 3| = 5
+|3 - 7| = 4
+|8 - 1| = 7
+|10 - 13| = 3
+Among all possible differences, the maximum value of 7 is obtained by |8 - 1| = 7.
+
+Input: root = [1,null,2,null,0,3]
+Output: 3
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDiff;
+    void findMaxUtil(TreeNode *root, TreeNode *child) {
+        if (root == NULL || child == NULL)
+            return;
+
+        maxDiff = max(maxDiff, abs(root->val - child->val));
+        findMaxUtil(root, child->left);
+        findMaxUtil(root, child->right);
+    }
+
+    void maxAncestorDiff_bruteforce(TreeNode *root) {
+        if (root == NULL)
+            return;
+
+        findMaxUtil(root, root->left);
+        findMaxUtil(root, root->right);
+
+        maxAncestorDiff_bruteforce(root->left);
+        maxAncestorDiff_bruteforce(root->right);        
+    }
+
+    int maxAncestorDiff_optimal(TreeNode *root, int minVal, int maxVal) {
+        if (root == NULL)
+            return abs(minVal-maxVal);
+
+        minVal = min(minVal, root->val);
+        maxVal = max(maxVal, root->val);
+
+        int L = maxAncestorDiff_optimal(root->left, minVal, maxVal);
+        int R = maxAncestorDiff_optimal(root->right, minVal, maxVal);
+
+        return max(L, R);
+    }
+    
+    int maxAncestorDiff(TreeNode* root) {
+        //maxDiff = -1;
+        //maxAncestorDiff_bruteforce(root);
+        //return maxDiff;
+        return maxAncestorDiff_optimal(root, root->val, root->val);
+    }
+};
