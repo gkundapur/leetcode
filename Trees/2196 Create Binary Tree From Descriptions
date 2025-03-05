@@ -1,0 +1,76 @@
+/*
+https://leetcode.com/problems/create-binary-tree-from-descriptions/description/?envType=problem-list-v2&envId=tree
+
+You are given a 2D integer array descriptions where descriptions[i] = [parenti, childi, isLefti] indicates that parenti is the parent of childi in a binary tree of unique values. Furthermore,
+
+If isLefti == 1, then childi is the left child of parenti.
+If isLefti == 0, then childi is the right child of parenti.
+Construct the binary tree described by descriptions and return its root.
+
+The test cases will be generated such that the binary tree is valid.
+
+Input: descriptions = [[20,15,1],[20,17,0],[50,20,1],[50,80,0],[80,19,1]]
+Output: [50,20,80,15,17,19]
+Explanation: The root node is the node with value 50 since it has no parent.
+The resulting binary tree is shown in the diagram.
+
+Input: descriptions = [[1,2,1],[2,3,0],[3,4,1]]
+Output: [1,2,null,null,3,4]
+Explanation: The root node is the node with value 1 since it has no parent.
+The resulting binary tree is shown in the diagram.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* createBinaryTree(vector<vector<int>>& descriptions) {
+        // Add all nodes to map as you create        
+        unordered_map<int, TreeNode *> mpNodes;
+
+        // if a node is child of some node, add it to childrens set
+        unordered_set<int> childrens;
+
+        // iterate through descriptions
+        for (vector<int>& vec: descriptions) {
+            int parent = vec[0];
+            int child = vec[1];
+            int leftchild = vec[2];
+
+            // parent not in map, create a node and add it to map
+            if (mpNodes.find(parent) == mpNodes.end())
+                mpNodes[parent] = new TreeNode(parent);
+
+            // if child is not in map, create a node and add it to map
+            if (mpNodes.find(child) == mpNodes.end()) 
+                mpNodes[child] = new TreeNode(child);
+
+            // connect parent to child based on left or right
+            if (leftchild == 1)
+                mpNodes[parent]->left = mpNodes[child];
+            else
+                mpNodes[parent]->right = mpNodes[child];
+
+            // add child to childrens set to identify the root as root cannot be child of any node
+            childrens.insert(child);
+        }
+
+        // iterate though descriptions and return the root which is not in children set
+        for (vector<int>& vec: descriptions) {
+            int node = vec[0];
+            // if this node not in children's set, then it's root
+            if (childrens.find(node) == childrens.end())
+                return mpNodes[node];
+        }     
+        return NULL; 
+    }
+};
