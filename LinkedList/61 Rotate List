@@ -1,0 +1,49 @@
+/*
+https://leetcode.com/problems/rotate-list/description/?envType=problem-list-v2&envId=linked-list
+
+Given the head of a linked list, rotate the list to the right by k places.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    int findlen(ListNode *head, ListNode **lastnode) {
+        int len = 1;
+
+        while (head->next) {
+            len++;
+            head = head->next;
+        }
+        *lastnode = head;
+        return len;
+    }
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (head == NULL || k == 0)
+            return head;
+            
+        ListNode *lastnode;
+
+        int len = findlen(head, &lastnode);
+
+        lastnode->next = head;
+
+        k = k % len;
+
+        for (int i = 0; i < len - k; i++)
+            lastnode = lastnode->next;
+
+        head = lastnode->next;
+        lastnode->next = NULL;
+
+        return head;
+    }
+};
