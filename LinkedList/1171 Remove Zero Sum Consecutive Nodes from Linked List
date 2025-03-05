@@ -1,0 +1,93 @@
+/*
+https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/?envType=problem-list-v2&envId=linked-list
+
+Given the head of a linked list, we repeatedly delete consecutive sequences of nodes that sum to 0 until there are no such sequences.
+
+After doing so, return the head of the final linked list.  You may return any such answer.
+
+ 
+
+(Note that in the examples below, all sequences are serializations of ListNode objects.)
+
+Example 1:
+
+Input: head = [1,2,-3,3,1]
+Output: [3,1]
+Note: The answer [1,2,1] would also be accepted.
+Example 2:
+
+Input: head = [1,2,3,-3,4]
+Output: [1,2,4]
+Example 3:
+
+Input: head = [1,2,3,-3,-2]
+Output: [1]
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *removeZeroSumSublists_rec(ListNode *head) {
+        if (head == NULL)
+            return head;
+
+        ListNode *cur = head;
+        int prefSum = 0;
+        while (cur) {
+            prefSum += cur->val;
+            if (prefSum ==0) {
+                head = cur->next;
+                return removeZeroSumSublists_rec(head);
+            }
+            cur = cur->next;
+        }
+        head->next = removeZeroSumSublists_rec(head->next);
+        return head;
+    }
+
+    ListNode *removeZeroSumSublists_using_map(ListNode *head) {
+        if (head == NULL)
+            return head;
+
+        ListNode *dummy = new ListNode(0);
+        dummy->next = head;
+
+        int prefSum = 0;
+        unordered_map<int, ListNode *> mp;
+        mp[prefSum] = dummy;
+        while (head != NULL) {
+            prefSum += head->val;
+            if (mp.find(prefSum) != mp.end()) {
+                ListNode *start = mp[prefSum];
+                ListNode *temp = start;
+                int pSum = prefSum;
+
+                while (temp != head) {
+                    temp = temp->next;
+                    pSum += temp->val;
+                    if (temp != head)
+                        mp.erase(pSum);
+
+                }
+                start->next = head->next;
+            } else
+                mp[prefSum] = head;
+            head = head->next;
+        }
+        return dummy->next;
+    }
+
+    ListNode* removeZeroSumSublists(ListNode* head) {
+        return removeZeroSumSublists_rec(head);
+        //return removeZeroSumSublists_using_map(head);
+    }
+};
