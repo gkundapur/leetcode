@@ -1,0 +1,71 @@
+/*
+https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/description/?envType=problem-list-v2&envId=tree
+
+Given two integer arrays, preorder and postorder where preorder is the preorder traversal of a binary tree of distinct values and postorder is the postorder traversal of the same tree, 
+reconstruct and return the binary tree.
+
+If there exist multiple answers, you can return any of them.
+
+Input: preorder = [1,2,4,5,3,6,7], postorder = [4,5,2,6,7,3,1]
+Output: [1,2,3,4,5,6,7]
+
+Input: preorder = [1], postorder = [1]
+Output: [1]
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    //TreeNode* construct(vector<int> &preorder, vector<int> &postorder, int &preIdx,
+    //                      int postStart, int postEnd, int size) {
+    TreeNode* construct(vector<int> &preorder, unordered_map<int, int>& postorderMap, int &preIdx,
+                          int postStart, int postEnd, int size) {
+  
+        if (preIdx >= size || postStart > postEnd)
+            return nullptr;
+
+        TreeNode* root = new TreeNode(preorder[preIdx]);
+        ++preIdx;
+
+        if (postStart == postEnd)
+            return root;
+
+        // Search the next element of pre[] in post[]
+        //int postIdx = postStart;
+        //while (postIdx <= postEnd) {
+          //  if (preorder[preIdx] == postorder[postIdx])
+            //    break;
+            //postIdx++;
+        //}
+
+        int postIdx = postorderMap[preorder[preIdx]];
+        //if (postIdx <= postEnd) {
+            root->left = construct(preorder, postorderMap, preIdx, postStart, postIdx, size);
+            root->right = construct(preorder, postorderMap, preIdx, postIdx + 1, postEnd - 1, size);
+        //}
+
+        return root;
+    }
+
+    TreeNode* constructFromPrePost(vector<int>& preorder, vector<int>& postorder) {
+        unordered_map<int,int> postorderMap;
+        for (int i=0; i < postorder.size(); i++)
+            postorderMap[postorder[i]] = i;
+
+        int preIdx = 0;
+        int size = postorder.size();
+        
+        //return construct(preorder, postorder, preIdx, 0, size-1, size);
+        return construct(preorder, postorderMap, preIdx, 0, size-1, size);
+    }
+};
