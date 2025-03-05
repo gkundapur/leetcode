@@ -1,0 +1,60 @@
+/*
+  https://leetcode.com/problems/swap-nodes-in-pairs/description/?envType=problem-list-v2&envId=linked-list
+
+  Given a linked list, swap every two adjacent nodes and return its head. You must solve the problem without modifying the values in the list's nodes (i.e., only nodes themselves may be changed.) 
+
+  Example 1:
+
+  Input: head = [1,2,3,4]
+
+  Output: [2,1,4,3]
+*/
+
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *swapPairs_approach1(ListNode *head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+
+        ListNode *temp = head->next;
+        head->next = swapPairs_approach1(head->next->next);
+        temp->next = head;
+
+        return temp;
+    }
+
+    ListNode *swapPairs_approach2(ListNode *head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+            
+        ListNode *curNode = head;
+        ListNode *newHead = head->next;
+
+        while (curNode && curNode->next) {
+            ListNode *temp = curNode->next;
+            curNode->next = curNode->next->next;
+            temp->next = curNode;
+            curNode = curNode->next;
+
+            if (curNode && curNode->next)
+                temp->next->next = curNode->next;
+        }
+        return newHead;
+    }
+
+    ListNode* swapPairs(ListNode* head) {
+        //return swapPairs_approach1(head);
+        return swapPairs_approach2(head);
+    }
+};
