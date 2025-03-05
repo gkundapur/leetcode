@@ -1,0 +1,68 @@
+/*
+https://leetcode.com/problems/swapping-nodes-in-a-linked-list/description/?envType=problem-list-v2&envId=linked-list
+
+You are given the head of a linked list, and an integer k.
+
+Return the head of the linked list after swapping the values of the kth node from the beginning and the kth node from the end (the list is 1-indexed).
+
+Input: head = [1,2,3,4,5], k = 2
+Output: [1,4,3,2,5]
+
+Input: head = [7,9,6,6,7,8,3,0,9,5], k = 5
+Output: [7,9,6,6,8,7,3,0,9,5]
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapNodes(ListNode* head, int k) {
+        if (head == NULL)
+            return head;
+#if 0
+        ListNode* begkthnode;
+        ListNode* kthnodefromend;
+        ListNode* cur = head;
+
+        for (int i = 1; i < k; i++)
+            if (cur)
+                cur = cur->next;
+        begkthnode = cur;
+        kthnodefromend = head;
+        while (cur->next) {
+            kthnodefromend = kthnodefromend->next;
+            cur = cur->next;
+        }
+
+        int temp = begkthnode->val;
+        begkthnode->val = kthnodefromend->val;
+        kthnodefromend->val = temp;
+#endif
+        ListNode *p1 = NULL, *p2 = NULL;
+        ListNode *cur = head;
+        while (cur) {
+            if (p2 != NULL)
+                p2 = p2->next;
+            k--;
+            if (k == 0) {
+                p1 = cur;
+                p2 = head;
+            }
+            cur = cur->next;
+        }
+
+        int temp = p1->val;
+        p1->val = p2->val;
+        p2->val = temp;        
+        
+        return head;
+    }
+};
