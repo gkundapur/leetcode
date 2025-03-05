@@ -1,0 +1,100 @@
+/*
+https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/description/?envType=problem-list-v2&envId=tree
+
+Given the root of a binary tree, the value of a target node target, and an integer k, return an array of the values of all nodes that have a distance k from the target node.
+You can return the answer in any order.
+
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], target = 5, k = 2
+Output: [7,4,1]
+Explanation: The nodes that are a distance 2 from the target node (with value 5) have values 7, 4, and 1.
+
+Input: root = [1], target = 1, k = 3
+Output: []
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    unordered_map<TreeNode*, TreeNode*> parent_mp;
+public:
+    // construct node to parent map
+    void inorder(TreeNode *root) {
+        if (root) {
+            if (root->left)
+                parent_mp[root->left] = root;
+            inorder(root->left);
+
+            if (root->right)
+                parent_mp[root->right] = root;
+            inorder(root->right);            
+        }
+    }
+
+    vector<int> distanceKNodes(TreeNode *target, int k) {
+    //void distanceKNodes(TreeNode *target, int k, vector<int>& result) {    
+        // keeps track of visited nodes
+        unordered_map<TreeNode *, bool> visited;
+        queue<TreeNode *> que;
+
+        // start traversing from target node
+        visited[target] = true;        
+        que.push(target);
+
+        while (!que.empty()) {
+            if (k == 0)
+                break;
+
+            int n = que.size();
+
+            while (n--) {
+                TreeNode *node = que.front();
+                que.pop();
+
+                // add unvisited left child to queue
+                if (node->left && !visited[node->left]) {
+                    que.push(node->left);
+                    visited[node->left] = true;
+                }
+
+                // add unvisited right child to queue
+                if (node->right && !visited[node->right]) {
+                    que.push(node->right);
+                    visited[node->right] = true;
+                }
+
+                // add unvisited parent node to queue
+                if (parent_mp[node] && !visited[parent_mp[node]]) {
+                    que.push(parent_mp[node]);
+                    visited[parent_mp[node]] = true;
+                }
+
+            }
+            k--;
+        }
+
+        vector<int> result;
+        while (!que.empty()) {
+            TreeNode *node = que.front();
+            que.pop();
+            result.push_back(node->val);
+        }
+        return result;
+    }
+    
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+        // populate node->parent in parent_mp
+        inorder(root);
+
+        vector<int> result;
+        //distanceKNodes(target, k, result);
+        result = distanceKNodes(target, k);
+        return result;
+    }
+};
