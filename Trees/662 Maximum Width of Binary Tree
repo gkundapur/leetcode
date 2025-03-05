@@ -1,0 +1,69 @@
+/*
+https://leetcode.com/problems/maximum-width-of-binary-tree/description/?envType=problem-list-v2&envId=tree
+
+Given the root of a binary tree, return the maximum width of the given tree.
+
+The maximum width of a tree is the maximum width among all levels.
+
+The width of one level is defined as the length between the end-nodes (the leftmost and rightmost non-null nodes), 
+where the null nodes between the end-nodes that would be present in a complete binary tree extending down to that level are also counted into the length calculation.
+
+It is guaranteed that the answer will in the range of a 32-bit signed integer.
+
+Input: root = [1,3,2,5,3,null,9]
+Output: 4
+Explanation: The maximum width exists in the third level with length 4 (5,3,null,9).
+
+Input: root = [1,3,2,5,null,null,9,6,null,7]
+Output: 7
+Explanation: The maximum width exists in the fourth level with length 7 (6,null,null,null,null,null,7).
+
+Input: root = [1,3,2,5]
+Output: 2
+Explanation: The maximum width exists in the second level with length 2 (3,2).
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    typedef unsigned long long ll;
+    int widthOfBinaryTree(TreeNode* root) {
+        if (root == NULL)
+            return 0;
+
+        ll maxWidth = 0;
+        queue<pair<TreeNode *, ll>> que;
+
+        que.push({root, 0});
+        while (!que.empty()) {
+            ll firstNode_idx = que.front().second;
+            ll lastNode_idx = que.back().second;
+
+            maxWidth = max(maxWidth, lastNode_idx - firstNode_idx + 1);
+            int count = que.size();            
+
+            while(count--) {
+                TreeNode *node = que.front().first;
+                ll idx = que.front().second;
+                que.pop();
+
+                if (node->left)
+                    que.push({node->left, 2 * idx + 1});
+
+                if (node->right)
+                    que.push({node->right, 2 * idx + 2});
+            }
+        }
+        return maxWidth;
+    }
+};
