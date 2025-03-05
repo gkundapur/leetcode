@@ -1,0 +1,92 @@
+/*
+https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/description/?envType=problem-list-v2&envId=tree
+
+Given the root of a binary tree, the level of its root is 1, the level of its children is 2, and so on.
+
+Return the smallest level x such that the sum of all the values of nodes at level x is maximal.
+
+Input: root = [1,7,0,7,-8,null,null]
+Output: 2
+Explanation: 
+Level 1 sum = 1.
+Level 2 sum = 7 + 0 = 7.
+Level 3 sum = 7 + -8 = -1.
+So we return the level with the maximum sum which is level 2.
+
+Input: root = [989,null,10250,98693,-89388,null,null,null,-32127]
+Output: 2
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int bfs(TreeNode *root) {
+        int maxSum = INT_MIN;
+        int level = 0;
+        int curLevel = 1;
+
+        queue<TreeNode *> que;
+        que.push(root);
+        while (!que.empty()) {            
+            int sum = 0;
+            int n = que.size();
+            while (n--) {
+                TreeNode *node = que.front();
+                que.pop();
+
+                sum += node->val;
+                if (node->left)
+                    que.push(node->left);
+                if (node->right)
+                    que.push(node->right);
+            }
+            if (sum > maxSum) {
+                maxSum = sum;
+                level = curLevel;
+            }
+            curLevel++;
+        }
+        return level;
+    }
+    
+    void dfs(TreeNode *root, int level, map<int, int>& mp) {
+        if (root == NULL)
+            return;
+
+        mp[level] += root->val;
+        dfs(root->left, level+1, mp);
+        dfs(root->right, level+1, mp);
+    }
+
+    int maxLevelSum(TreeNode* root) {
+        //return bfs(root);
+
+        // create a ordered map of level and sum
+        map<int, int> mp;
+        int level = 1;
+        dfs(root, level, mp);
+
+        int maxSum = INT_MIN;
+        int result_level = 0;
+
+        for (auto itr = mp.begin(); itr != mp.end(); itr++) {
+            int level = itr->first;
+            int sum = itr->second;
+            if (sum > maxSum) {
+                maxSum = sum;
+                result_level = level;
+            }
+        }
+        return result_level;
+    }
+};
