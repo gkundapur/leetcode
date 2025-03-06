@@ -1,0 +1,39 @@
+/*
+https://leetcode.com/problems/add-digits/description/
+
+Given an integer num, repeatedly add all its digits until the result has only one digit, and return it.
+
+Input: num = 38
+Output: 2
+Explanation: The process is
+38 --> 3 + 8 --> 11
+11 --> 1 + 1 --> 2 
+Since 2 has only one digit, return it.
+
+Input: num = 0
+Output: 0
+*/
+
+class Solution {
+public:
+    int add_1(int num) {
+        while (num > 9) {
+            int digit = num % 10;
+            num /= 10;
+            num = num + digit;
+        }
+        return num;
+    }
+
+    int add_2(int num) {
+        if (num == 0)
+            return 0;
+        return num % 9 == 0 ? 9 : num % 9;
+    }
+
+
+    int addDigits(int num) {
+        //return add_1(num);
+        return add_2(num);
+    }
+};
