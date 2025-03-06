@@ -1,0 +1,109 @@
+/*
+https://leetcode.com/problems/kth-largest-element-in-an-array/description/?envType=problem-list-v2&envId=array
+
+Given an integer array nums and an integer k, return the kth largest element in the array.
+Note that it is the kth largest element in the sorted order, not the kth distinct element.
+Can you solve it without sorting?
+
+Input: nums = [3,2,1,5,6,4], k = 2
+Output: 5
+
+Input: nums = [3,2,3,1,2,4,5,5,6], k = 4
+Output: 4
+*/
+
+class Solution {
+public:
+    void swap(int *a, int *b) {
+        int temp = *a;
+        *a = *b;
+        *b = temp;
+    }
+
+    void minHeapify(/*int a[]*/vector<int>& a, int n, int i) {
+        int smallest = i;
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+
+        if (l < n && a[l] < a[smallest])
+            smallest = l;
+
+        if (r < n && a[r] < a[smallest])
+            smallest = r;
+
+        if (smallest != i) {
+            swap(&a[i], &a[smallest]);
+            minHeapify(a, n, smallest);
+        }        
+    }
+
+    void buildMinHeap(vector<int>& a, int n) {
+        for (int i = n/2; i >= 0; i--)
+            minHeapify(a, n, i);
+    }
+
+    int kthlargest_minheap(vector<int>& nums, int n, int k) {
+        //int minHeap[k];
+        vector<int> minHeap(k);
+        int i;
+
+        for (i = 0; i < k; i++)
+            minHeap[i] = nums[i];
+
+        buildMinHeap(minHeap, k);
+
+        for (i = k; i < n; i++) {
+            if (nums[i] > minHeap[0]) {
+                minHeap[0] = nums[i];
+                minHeapify(minHeap, k, 0);
+            }
+        }
+        return minHeap[0];
+    }
+
+    int partition(vector<int>& nums, int low, int high) {
+        int pivot = nums[low];
+        int i = low+1;
+        int j = high;
+
+        while (i <= j) {
+            if (nums[i] < pivot && nums[j] > pivot) {
+                std::swap(nums[i], nums[j]);
+                i++;
+                j--;
+            }
+            if (nums[i] >= pivot)
+                i++;
+            if (nums[j] <= pivot)
+                j--;
+        }
+        std::swap(nums[low], nums[j]);
+        return j;
+    }
+
+    int kthlargest_quickselect(vector<int>& nums, int low, int high, int k) {
+        int pivot = partition(nums, low, high);
+        if (pivot == k - 1)
+            return nums[pivot];
+        if (pivot > k - 1)
+            return kthlargest_quickselect(nums, low, pivot-1, k);
+        else 
+            return kthlargest_quickselect(nums, pivot+1, high, k);
+    }
+
+    int kthlarget_pq(vector<int>& nums, int k) {
+        priority_queue<int, vector<int>, greater<int>> pq; // min_heap
+
+        for (int i = 0; i < nums.size(); i++) {
+            pq.push(nums[i]);
+            if (pq.size() > k)
+                pq.pop();
+        }
+        return pq.top();
+    }
+    int findKthLargest(vector<int>& nums, int k) {
+        //return kthlargest_minheap(nums, nums.size(), k);  
+        //return kthlargest_quickselect(nums, 0, nums.size(), k);
+        return kthlarget_pq(nums, k);   
+    }
+};
