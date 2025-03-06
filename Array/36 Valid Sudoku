@@ -1,0 +1,118 @@
+/*
+https://leetcode.com/problems/valid-sudoku/description/?envType=problem-list-v2&envId=array
+
+Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+
+Each row must contain the digits 1-9 without repetition.
+Each column must contain the digits 1-9 without repetition.
+Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+Note:
+
+A Sudoku board (partially filled) could be valid but is not necessarily solvable.
+Only the filled cells need to be validated according to the mentioned rules.
+
+Input: board = 
+[["5","3",".",".","7",".",".",".","."]
+,["6",".",".","1","9","5",".",".","."]
+,[".","9","8",".",".",".",".","6","."]
+,["8",".",".",".","6",".",".",".","3"]
+,["4",".",".","8",".","3",".",".","1"]
+,["7",".",".",".","2",".",".",".","6"]
+,[".","6",".",".",".",".","2","8","."]
+,[".",".",".","4","1","9",".",".","5"]
+,[".",".",".",".","8",".",".","7","9"]]
+Output: true
+
+Input: board = 
+[["8","3",".",".","7",".",".",".","."]
+,["6",".",".","1","9","5",".",".","."]
+,[".","9","8",".",".",".",".","6","."]
+,["8",".",".",".","6",".",".",".","3"]
+,["4",".",".","8",".","3",".",".","1"]
+,["7",".",".",".","2",".",".",".","6"]
+,[".","6",".",".",".",".","2","8","."]
+,[".",".",".","4","1","9",".",".","5"]
+,[".",".",".",".","8",".",".","7","9"]]
+Output: false
+Explanation: Same as Example 1, except with the 5 in the top left corner being modified to 8. Since there are two 8's in the top left 3x3 sub-box, it is invalid.
+*/
+
+class Solution {
+public:
+    bool validate_rows(vector<vector<char>>& board, int m, int n) {
+        for (int row = 0; row < m; row++) {
+            unordered_set<char> st;
+            for (int col = 0; col < n; col++) {
+                 char ch = board[row][col];
+                if (ch == '.')
+                    continue;
+
+                if (st.find(ch) != st.end())
+                    return false;
+                st.insert(ch);
+            }
+        }
+        return true;
+    }
+
+    bool validate_cols(vector<vector<char>>& board, int m, int n) {
+        for (int col = 0; col < n; col++) {
+            unordered_set<char> st;
+            for (int row = 0; row < m; row++) {
+                 char ch = board[row][col];
+                if (ch == '.')
+                    continue;
+
+                if (st.find(ch) != st.end())
+                    return false;
+                st.insert(ch);
+            }
+        }
+        return true;
+    }
+
+    bool validate_boxes_utility(vector<vector<char>>& board, int sr, int er, int sc, int ec) {
+        unordered_set<char> st;
+        for (int row = sr; row <= er; row++) {            
+            for (int col = sc; col <= ec; col++) {
+                 char ch = board[row][col];
+                if (ch == '.')
+                    continue;
+
+                if (st.find(ch) != st.end())
+                    return false;
+                st.insert(ch);
+            }
+        }
+        return true;
+    }
+
+    bool validate_boxes(vector<vector<char>>& board, int m, int n) {
+        for (int starting_row = 0; starting_row < m; starting_row += 3) {
+            int ending_row = starting_row + 2;
+            for (int starting_col = 0; starting_col < n; starting_col += 3) {
+                int ending_col = starting_col + 2;
+
+                if (!validate_boxes_utility(board, starting_row, ending_row, starting_col, ending_col))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    bool isValidSudoku(vector<vector<char>>& board) {
+        int m = 9; // rows
+        int n = 9; // columns
+
+        if (!validate_rows(board, m, n))
+            return false;
+
+        if (!validate_cols(board, m, n))
+            return false;
+
+        if (!validate_boxes(board, m, n))
+            return false;
+
+        return true;        
+    }
+};
