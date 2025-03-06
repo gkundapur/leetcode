@@ -1,0 +1,42 @@
+/*
+https://leetcode.com/problems/top-k-frequent-elements/description/
+
+Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+
+Input: nums = [1], k = 1
+Output: [1]
+*/
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> mp; // {num, freq}
+        int n = nums.size();
+
+        for (int i = 0; i < n; i++)
+            mp[nums[i]]++;
+
+        typedef pair<int, int> P;
+        priority_queue<P, vector<P>, greater<P>> minHeap;
+
+        for (auto itr = mp.begin(); itr != mp.end(); itr++) {
+            int num = itr->first;
+            int freq = itr->second;
+
+            minHeap.push({freq, num});
+            if (minHeap.size() > k)
+                minHeap.pop();
+        }
+
+        vector<int> topFreqEl(k);
+        for (int i = 0; i < k; i++) {
+            topFreqEl[i] = minHeap.top().second;
+            minHeap.pop();
+        }
+
+        return topFreqEl;     
+    }   
+};
