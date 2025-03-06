@@ -1,0 +1,57 @@
+/*
+https://leetcode.com/problems/majority-element-ii/description/?envType=problem-list-v2&envId=array
+
+Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times. 
+
+Input: nums = [3,2,3]
+Output: [3]
+
+Input: nums = [1]
+Output: [1]
+
+Input: nums = [1,2]
+Output: [1,2]
+*/
+
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        int n = nums.size();
+        int majorityEle1 = INT_MIN, majorityEle2 = INT_MIN;
+        int count1 = 0, count2 = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == majorityEle1)
+                count1++;
+            else if (nums[i] == majorityEle2)
+                count2++;
+            else if (count1 == 0) {
+                majorityEle1 = nums[i];
+                count1++;
+            }
+            else if (count2 == 0) {
+                majorityEle2 = nums[i];
+                count2++;
+            } else {
+                count1--;
+                count2--;
+            }
+        }
+
+        cout << "count1 = " << count1 << " count2 = " << count2 << endl;
+        cout << "el1 = " << majorityEle1 << " ele2 = " << majorityEle2 << endl;
+        count1 = count2 = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == majorityEle1)
+                count1++;
+            if (nums[i] == majorityEle2)
+                count2++;
+        }
+        vector<int> result;
+        if (count1 > floor(n/3))
+            result.push_back(majorityEle1);
+        if (count2 > floor(n/3))
+            result.push_back(majorityEle2);
+        return result;        
+    }
+};
