@@ -1,0 +1,65 @@
+/*
+https://leetcode.com/problems/pascals-triangle-ii/description/?envType=problem-list-v2&envId=array
+
+Given an integer rowIndex, return the rowIndexth (0-indexed) row of the Pascal's triangle.
+
+In Pascal's triangle, each number is the sum of the two numbers directly above it as shown:
+
+Input: rowIndex = 3
+Output: [1,3,3,1]
+
+Input: rowIndex = 0
+Output: [1]
+
+Input: rowIndex = 1
+Output: [1,1]
+*/
+
+class Solution {
+public:
+    int ncr(int n, int r) {
+        if (n == r || r == 0)
+            return 1;
+        return ncr(n-1, r-1) + ncr(n-1, r);
+    }
+
+    vector<int> getRow1(int rowIndex) {
+        vector<int> res;
+
+        for (int r = 0; r <= rowIndex; r++)
+            res.push_back(ncr(rowIndex, r));
+
+        return res;
+    }
+
+    vector<int> getRow2(int rowIndex) {
+        vector<vector<int>> result(rowIndex+1);
+
+        for (int i = 0; i < rowIndex+1; i++) {
+            result[i] = vector<int> (i+1, 1);
+            for (int j = 1; j < i; j++) {
+                result[i][j] = result[i-1][j] + result[i-1][j-1];                
+            }
+        }
+        return result[rowIndex];
+    }
+
+    vector<int> getRow3(int rowIndex) {
+        vector<int> prev(rowIndex+1);
+
+        for (int i = 0; i < rowIndex+1; i++) {
+            vector<int> cur(i+1, 1);
+            for (int j = 1; j < i; j++) {
+                cur[j] = prev[j] + prev[j-1];                
+            }
+            prev = cur;
+        }
+        return prev;
+    }
+
+    vector<int> getRow(int rowIndex) {
+        //return getRow1(rowIndex)
+        //return getRow2(rowIndex);
+        return getRow3(rowIndex);
+    }
+};
