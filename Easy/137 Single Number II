@@ -1,0 +1,46 @@
+/*
+https://leetcode.com/problems/single-number-ii/description/
+
+Given an integer array nums where every element appears three times except for one, which appears exactly once. Find the single element and return it.
+You must implement a solution with a linear runtime complexity and use only constant extra space.
+
+Input: nums = [2,2,3,2]
+Output: 3
+
+Input: nums = [0,1,0,1,0,1,99]
+Output: 99
+*/
+
+class Solution {
+public:
+    int singleNumber_using_map(vector<int>& nums) {
+        unordered_map<int, int> mp; // {num, freq}
+
+        for (int i = 0; i < nums.size(); i++)
+            mp[nums[i]]++;
+
+        for (auto itr = mp.begin(); itr != mp.end(); itr++) {
+            if (itr->second == 1)
+                return itr->first;
+        }
+
+        return -1;
+    }
+
+    int singleNumber_using_bitmagic(vector<int>& nums) {
+        int ones = 0;
+        int twos = 0;
+
+        for (int i = 0; i < nums.size(); i++) {
+            ones ^= (nums[i] & ~twos);
+            twos ^= (nums[i] & ~ones);
+        }
+
+        return ones;
+    }
+
+    int singleNumber(vector<int>& nums) {
+        //return singleNumber_using_map(nums);
+        return singleNumber_using_bitmagic(nums);
+    }
+};
