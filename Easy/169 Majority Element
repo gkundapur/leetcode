@@ -1,0 +1,80 @@
+/*
+https://leetcode.com/problems/majority-element/?envType=study-plan-v2&envId=top-interview-150
+
+Given an array nums of size n, return the majority element.
+The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+
+Input: nums = [3,2,3]
+Output: 3
+
+Input: nums = [2,2,1,1,1,2,2]
+Output: 2
+*/
+
+class Solution {
+public:
+    //T.C: O(n^2)
+    int majorityElement_bruteforce(vector<int>& nums) {
+        int n = nums.size();
+
+        for (int i = 0; i < n; i++) {
+            int count = 0;
+            for (int j = 0; j < n; j++) {
+                if (nums[i] == nums[j])
+                    count++;
+            }
+            if (count > n/2)
+                return nums[i];
+        }
+        return -1;
+    }
+
+    //T.C: O(n), S.C: O(n)
+    int majorityElement_usingMap(vector<int>& nums) {
+        int n = nums.size();
+        unordered_map<int, int> mp;
+
+        for (int i = 0; i < n; i++) {
+            mp[nums[i]]++;
+
+            if (mp[nums[i]] > n/2)
+                return nums[i]; 
+        }
+        return -1;
+    }
+
+    //T.C: O(n), S.C: O(1)
+    int majorityElement_buyerMore(vector<int>& nums) {
+        int n = nums.size();
+        int majorityEle = -1;
+        int count = 0;
+        
+
+        for (int i = 0; i < n; i++) {
+            if (count == 0) {
+                majorityEle = nums[i];
+                count++;
+            } else if (nums[i] == majorityEle)
+                count++;
+            else
+                count--;
+        }
+
+        //return majorityEle;
+        //verification
+        count = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == majorityEle)
+                count++;
+        }
+        if (count > n/2)
+            return majorityEle;
+        return -1;
+    }
+    
+    int majorityElement(vector<int>& nums) {
+        //return majorityElement_bruteforce(nums);
+        //return majorityElement_usingMap(nums);
+        return majorityElement_buyerMore(nums);
+    }
+};
