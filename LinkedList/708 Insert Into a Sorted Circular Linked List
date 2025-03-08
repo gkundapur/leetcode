@@ -38,9 +38,9 @@ class Solution {
         Node* cur = head;
         Node* nextNode = head->next;
         while (nextNode != head) {
-            if ((cur->val <= insertVal && insertVal <= curr->val) || 
-                (cur->val > nextNode->val && (insertVal >= cur->val || 
-                insertVal <= curr->val))) {                
+            if ((insertVal >= cur->val && insertVal <= nextNode->val) || 
+                (insertVal < cur->val && cur->val > nextNode->val)  || 
+                (insertVal > curr->val && cur->val > nextNode->val)) {                
                 break;
             }
             cur = nextNode;
