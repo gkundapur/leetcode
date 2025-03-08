@@ -61,7 +61,39 @@ public:
         }
         return head;
     }
+
+    Node *flatten_rec(Node* head) {
+        if (head == NULL)
+            return head;
+
+        Node* cur = head;
+        while (cur) {
+            if (cur->child) {
+                Node* next = cur->next;
+                Node *childlist = flatten_rec(cur->child);
+
+                // attach the child list to cur
+                cur->next = childlist;
+                childlist->prev = cur;
+
+                // Find the tail of the childlist
+                Node *childlist_tail = childlist;
+                while (childlist_tail->next)
+                    childlist_tail = childlist_tail->next;
+                childlist_tail->next = next;
+                if (next)
+                    next->prev = childlist_tail;
+
+                cur->child = NULL;
+            }
+            cur = cur->next;
+        }
+        return head;
+    }
+
     Node* flatten(Node* head) {
-          return flatten_using_stack(head);
+        //return flatten_using_stack(head);
+        return flatten_rec(head);
+
     }
 };
