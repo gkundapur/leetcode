@@ -1,0 +1,133 @@
+/*
+https://leetcode.com/problems/maximum-twin-sum-of-a-linked-list/
+
+n a linked list of size n, where n is even, the ith node (0-indexed) of the linked list is known as the twin of the (n-1-i)th node, if 0 <= i <= (n / 2) - 1.
+
+For example, if n = 4, then node 0 is the twin of node 3, and node 1 is the twin of node 2. These are the only nodes with twins for n = 4.
+The twin sum is defined as the sum of a node and its twin.
+
+Given the head of a linked list with even length, return the maximum twin sum of the linked list.
+
+Input: head = [5,4,2,1]
+Output: 6
+Explanation:
+Nodes 0 and 1 are the twins of nodes 3 and 2, respectively. All have twin sum = 6.
+There are no other nodes with twins in the linked list.
+Thus, the maximum twin sum of the linked list is 6. 
+
+Input: head = [4,2,2,3]
+Output: 7
+Explanation:
+The nodes with twins present in this linked list are:
+- Node 0 is the twin of node 3 having a twin sum of 4 + 3 = 7.
+- Node 1 is the twin of node 2 having a twin sum of 2 + 2 = 4.
+Thus, the maximum twin sum of the linked list is max(7, 4) = 7. 
+
+Input: head = [1,100000]
+Output: 100001
+Explanation:
+There is only one node with a twin in the linked list having twin sum of 1 + 100000 = 100001.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    int pairSum_using_vector(ListNode *head) {
+        if (head == NULL || head->next == NULL)
+            return 0;
+
+        vector<int> v;
+        ListNode *cur = head;
+        while (cur) {
+            v.push_back(cur->val);
+            cur = cur->next;
+        }
+
+        int result = 0;
+        int i = 0;
+        int j = v.size() - 1;
+        while (i < j) {
+            int pairSum = v[i] + v[j];            
+            result = max(result, pairSum);            
+            i++;
+            j--;
+        }
+        return result;
+    }
+    
+    //----------------------------------------------------------------------------
+    int pairSum_using_stack(ListNode* head) {
+        stack<ListNode*> st;
+        ListNode* cur = head;
+
+        while (cur) {
+            st.push(cur);
+            cur = cur->next;
+        }
+
+        int n = st.size()/2;
+        cur = head;
+        int result = 0;
+        while (n--) {
+            int pairSum = cur->val + st.top()->val;
+            result = max(result, pairSum);
+            st.pop();
+            cur = cur->next;
+        }
+        return result;
+    }
+
+    //----------------------------------------------------------------------------
+    ListNode *findMid(ListNode* head) {
+        ListNode *slowPtr = head;
+        ListNode *fastPtr = head;
+
+        while (fastPtr && fastPtr->next) {
+            slowPtr = slowPtr->next;
+            fastPtr = fastPtr->next->next;
+        }
+        return slowPtr;
+    }
+
+    ListNode* reverseLL(ListNode* head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+
+        ListNode *newHead = reverseLL(head->next);
+        head->next->next = head;
+        head->next = NULL;
+        return newHead;
+    }
+
+    int pairSum_reverse_from_mid(ListNode *head) {
+        // Find mid point
+        ListNode *mid = findMid(head);
+        
+        // reverse LL from midpoint
+        mid = reverseLL(mid);        
+
+        int result = 0;
+        while (mid) {
+            result = max(result, head->val + mid->val);
+            head = head->next;
+            mid = mid->next;
+        }
+        return result;
+    }
+
+    int pairSum(ListNode* head) {
+        //return pairSum_using_vector(head);
+        //return pairSum_using_stack(head);
+        return pairSum_reverse_from_mid(head);
+    }
+};
+ 
