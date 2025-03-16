@@ -31,6 +31,8 @@ Explanation: Every node has value 1, so no nodes are removed.
  */
 class Solution {
 public:
+    //-------------------------------------------------------------------------------
+    // Works by forming new linked list, but ask is return the modified list
     // traverse from right to left using stack
     // returns new list not the modified list
     ListNode* removeZeroSumSublists_1(ListNode* head) {
@@ -61,6 +63,7 @@ public:
         return res;
     }
 
+    //-------------------------------------------------------------------------------
     ListNode* removeZeroSumSublists_2(ListNode* head) {
         if (head == NULL || head->next == NULL)
             return head;
