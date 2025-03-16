@@ -17,6 +17,7 @@ Given the head of a singly linked list, return true if it is a palindrome or fal
 class Solution {
 public:
     ListNode *cur; // for approach 4
+//-----------------------Approach 1------------------------------------------------
     // Time: O(n), space: O(n)
     bool isPalindrome_approach1(ListNode *head) {
         if (head == NULL)
@@ -44,6 +45,7 @@ public:
         return true;
     }
 
+//-----------------------Approach 2------------------------------------------------
     ListNode *reverse(ListNode *head) {
         if (head == NULL || head->next == NULL)
             return head;
@@ -83,6 +85,7 @@ public:
         return true;
     }
 
+//-----------------------Approach 3------------------------------------------------
     // reverse 1st half while finding mid point
     bool isPalindrome_approach3(ListNode* head) {
         if (head == NULL)
@@ -118,7 +121,8 @@ public:
         return true;
     }
 
-    // without reversing
+//-----------------------Approach 4------------------------------------------------
+    // without reversing, compare with the head of the list while recursion is unwinding
     bool isPalindrome_approach4(ListNode* head) {
         if (head == NULL)
             return true;
