@@ -24,6 +24,7 @@ class Solution {
 public:
     ListNode *cur; // for approach 2
 
+//----------------------------Approach 1------------------------------------------------------
     ListNode *reverse(ListNode *head) {
         if (head == NULL || head->next == NULL)
             return head;
@@ -57,6 +58,7 @@ public:
         }
     }
 
+//----------------------------Approach 2------------------------------------------------------
     void reorderList_approach2(ListNode* head) {
         if (head == NULL || head->next == NULL)
             return;
