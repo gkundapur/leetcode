@@ -26,6 +26,7 @@ Explanation: The figure above corresponds to the given linked list which represe
  */
 class Solution {
 public:
+    //-----------------------------------------------------------------------------------------------------
     int doubleItUtility(ListNode *head) {
         if (head == NULL)
             return 0;
@@ -47,6 +48,7 @@ public:
 
     }
 
+    //-----------------------------------------------------------------------------------------------------
     ListNode* doubleIt_approach2(ListNode* head) {
         ListNode *cur = head;
         ListNode *prev = NULL;
@@ -70,6 +72,7 @@ public:
         return head;
     }
 
+    //-----------------------------------------------------------------------------------------------------
     ListNode *doubleIt_approach3(ListNode *head) {
         if (head == NULL)
             return head;
@@ -91,6 +94,7 @@ public:
         return head;
     }
 
+    //-----------------------------------------------------------------------------------------------------
     ListNode *doubleIt_using_stack(ListNode *head) {
         if (head == NULL)
             return head;
