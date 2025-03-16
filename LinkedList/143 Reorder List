@@ -60,17 +60,22 @@ public:
 
 //----------------------------Approach 2------------------------------------------------------
     void reorderList_approach2(ListNode* head) {
-        if (head == NULL || head->next == NULL)
+        if (head == NULL)
             return;
 
         reorderList_approach2(head->next);
 
-        ListNode *curNext = cur->next;
+        ListNode *curNext = cur->next;        
+        if (head == cur) {
+            cur->next = NULL;
+            return;
+        } else if (cur->next == NULL)
+            return;        
+
         cur->next = head;
-        head->next = curNext;
+        head->next = curNext == head ? NULL : curNext;
         cur = curNext;
     }
-
         
     void reorderList(ListNode* head) {
         //reorderList_approach1(head);
