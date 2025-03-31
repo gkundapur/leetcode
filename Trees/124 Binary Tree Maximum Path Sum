@@ -30,6 +30,8 @@ Explanation: The optimal path is 15 -> 20 -> 7 with a path sum of 15 + 20 + 7 = 
  */
 class Solution {
 public:
+    int ans;
+
     int findmaxPathSum(TreeNode *root, int& res) {
         if (root == NULL)
             return 0;
@@ -37,14 +39,34 @@ public:
         int lsum = max(findmaxPathSum(root->left, res), 0);
         int rsum = max(findmaxPathSum(root->right, res), 0);
 
-        res = max(res, lsum+rsum+root->val);
+        res = max(res, lsum + rsum + root->val);
 
         return max(lsum, rsum) + root->val;
     }
-    int maxPathSum(TreeNode* root) {
-        int res = INT_MIN;
 
-        findmaxPathSum(root, res);
-        return res;
+    int findmaxPathSum_1(TreeNode *root, int& res) {
+        if (root == NULL)
+            return 0;
+
+        int lsum = findmaxPathSum_1(root->left);
+        int rsum = findmaxPathSum_1(root->right);
+
+        int full_path = root->val + lsum + rsum;
+        int lsum_or_rsum = max(lsum, rsum) + root->val;
+
+        ans = max({ans, root->val, lsum_or_rsum, full_path});
+
+        return max(root->val, lsum_or_rsum);
+    }
+
+    int maxPathSum(TreeNode* root) {
+        //int res = INT_MIN;
+
+        //findmaxPathSum(root, res);
+        //return res;
+
+        ans = INT_MIN;
+        findmaxPathSum(root);
+        return ans;
     }
 };
