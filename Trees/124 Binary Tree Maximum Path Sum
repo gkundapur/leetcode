@@ -44,7 +44,7 @@ public:
         return max(lsum, rsum) + root->val;
     }
 
-    int findmaxPathSum_1(TreeNode *root, int& res) {
+    int findmaxPathSum_1(TreeNode *root) {
         if (root == NULL)
             return 0;
 
