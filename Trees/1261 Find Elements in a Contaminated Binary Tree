@@ -62,9 +62,33 @@ public:
         dfs(root->right, 2 * x + 2);
     }
 
+    void bfs(TreeNode *root, int x) {
+        queue<TreeNode *> que;
+        root->val = x;
+        que.push(root);
+
+        while (!que.empty()) {
+            TreeNode *node = que.front();
+            que.pop();
+
+            set.insert(node->val);
+            
+            if (node->left) {
+                node->left->val = 2 * node->val + 1;
+                que.push(node->left);
+            }
+
+            if (node->right) {
+                node->right->val = 2 * node->val + 2;
+                que.push(node->right);
+            }
+        }
+    }
+
     FindElements(TreeNode* root) {
         set.clear();
-        dfs(root, 0);        
+        dfs(root, 0);
+        //bfs(root, 0);
     }
     
     bool find(int target) {
