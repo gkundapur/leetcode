@@ -56,8 +56,37 @@ public:
         return trapped_water;
     }
 
+    int trap_water_stack(vector<int>& height) {
+        int n = height.size();
+        int trapped_water = 0;
+        stack<int> st;
+        //st.push(0);
+    
+        //for (int i = 1; i < n; i++) {
+        for (int i = 0; i < n; i++) {
+            while (!st.empty() && height[i] > height[st.top()]) {
+                int mid = st.top();
+                st.pop();
+    
+                if (st.empty())
+                    break;
+    
+                int right = i;
+                int left = st.top();
+    
+                int h = min(height[right], height[left]) - height[mid];
+                int w = right - left - 1;
+    
+                trapped_water += (h * w);
+            }
+            st.push(i);
+        }
+        return trapped_water;
+    }
+
     int trap(vector<int>& height) {
         return trap1(height);
-        //return trap2(height);    
+        //return trap2(height);
+        //return trap_water_stack(height);
     }
 };
