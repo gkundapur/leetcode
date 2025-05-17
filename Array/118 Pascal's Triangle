@@ -47,19 +47,8 @@ public:
         return result;
     }
 
-    vector<vector<int>> generate_pascal2(int numRows) {
-        vector<vector<int>> result;
-
-        for (int i = 0; i < numRows; i++) {
-            vector<int> rows;
-            for (int j = 0; j <= i; j++) {
-                if (i == 0 || i == j)
-                    rows.push_back(1);
-            }
-        }
-    }
     vector<vector<int>> generate(int numRows) {
         //return generate_pascal(numRows);
-        return generate_pascal1(numRows);
+        return generate_pascal1(numRows);   
     }
 };
