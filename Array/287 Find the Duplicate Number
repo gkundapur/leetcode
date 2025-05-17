@@ -20,7 +20,7 @@ Output: 3
 
 class Solution {
 public:
-    int findDuplicate(vector<int>& nums) {
+    int findDuplicate1(vector<int>& nums) {
         int n = nums.size();
         int l = 1;
         int r = n - 1;
@@ -39,5 +39,31 @@ public:
                 r = mid;
         }
         return l;        
+    }
+
+    int findDuplicate2(vector<int>& nums) {
+        int slow = nums[0];
+        int fast = nums[0];
+
+        // Detect cycle
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        }
+        
+        slow = nums[0];
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+
+        return slow;
+    }
+
+    int findDuplicate(vector<int>& nums) {
+        //return findDuplicate1(nums);
+        return findDuplicate2(nums);
     }
 };
