@@ -16,12 +16,15 @@ public:
         unordered_map<int, int> mp; // {num, freq}
         int n = nums.size();
 
+        // compute frequency of elements - O(n)
         for (int i = 0; i < n; i++)
             mp[nums[i]]++;
 
+        // store {freq, element} in min heap
         typedef pair<int, int> P;
         priority_queue<P, vector<P>, greater<P>> minHeap;
 
+        // heap size is K: O(logK)
         for (auto itr = mp.begin(); itr != mp.end(); itr++) {
             int num = itr->first;
             int freq = itr->second;
@@ -30,6 +33,8 @@ public:
             if (minHeap.size() > k)
                 minHeap.pop();
         }
+
+        // Total O(nlogK)
 
         vector<int> topFreqEl(k);
         for (int i = 0; i < k; i++) {
