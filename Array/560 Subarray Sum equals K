@@ -1,0 +1,91 @@
+/*
+https://leetcode.com/problems/subarray-sum-equals-k/description/
+
+Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+
+A subarray is a contiguous non-empty sequence of elements within an array.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,1], k = 2
+Output: 2
+Example 2:
+
+Input: nums = [1,2,3], k = 3
+Output: 2
+*/
+
+class Solution {
+public:
+    // O(n^2)
+    int subarraySum1(vector<int>& nums, int k) {
+        int n = nums.size();
+        int count = 0;        
+
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = i; j < n; j++) {
+                sum += nums[j];
+                if (sum == k)
+                    count++;
+            }
+        }
+        return count;
+    }
+
+    // O(n)
+    int subarraySum2(vector<int>& nums, int k) {
+        int n = nums.size();
+        int count = 0;
+        vector<int> ps(n, 0);  // prefix sum array
+
+        ps[0] = nums[0];
+        for (int i = 1; i < n; i++)
+            ps[i] = ps[i - 1] + nums[i];
+
+        unordered_map<int, int> um;  // {prefixsum, freq}
+        for (int i = 0; i < n; i++) {
+            if (ps[i] == k)
+                count++;
+
+            int val = ps[i] - k;
+            if (um.find(val) != um.end())
+                count += um[val];
+
+            if (um.find(ps[i]) == um.end())
+                um[ps[i]] = 0;
+            um[ps[i]]++;            
+        }
+        return count;
+    }
+
+    // O(n)
+    int subarraySum3(vector<int>& nums, int k) {
+        int n = nums.size();
+        int count = 0;
+        int sum = 0;
+        unordered_map<int, int> um; // {prefixsum, freq}
+
+        for (int i = 0; i < n; i++) {
+            sum += nums[i];
+
+            if (sum == k)
+                count++;
+
+            if (um.find(sum - k) != um.end())
+                count += um[sum-k];
+
+            um[sum]++;
+        }
+        return count;
+    }
+
+    int subarraySum(vector<int>& nums, int k) {
+        //return subarraySum1(nums, k);
+        //return subarraySum2(nums, k);
+        return subarraySum3(nums, k);
+        
+    }
+};
