@@ -53,7 +53,7 @@ public:
         return newHead;
     }
 
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode* addTwoNumbers_by_reversing(ListNode* l1, ListNode* l2) {
         if (l1 == NULL && l2 == NULL)
             return NULL;
 
@@ -110,7 +110,54 @@ public:
             prev->next = new ListNode(carry);
 
         head = reverse(head);
-        return head;      
+        return head;
+    }
+
+    ListNode *addNumbers_using_stack(ListNode* l1, ListNode* l2) {
+        if (l1 == NULL && l2 == NULL)
+            return NULL;
+
+        if (l1 != NULL && l2 == NULL)
+            return l1;
+
+        if (l2 != NULL && l1 == NULL)
+            return l2;
+
+        stack<int> s1, s2;
+
+        while (l1) {
+            s1.push(l1->val);
+            l1 = l1->next;
+        }
+
+        while (l2) {
+            s2.push(l2->val);
+            l2 = l2->next;
+        }
+
+        ListNode* result = NULL;
+        int carry = 0;
+        while (!s1.empty() || !s2.empty() || carry != 0) {
+            int d1 = !s1.empty() ? s1.top() : 0;
+            int d2 = !s2.empty() ? s2.top() : 0;
+
+            int sum = d1 + d2 + carry;
+            carry = sum / 10;
+
+            ListNode *newNode = new ListNode(sum % 10);
+            newNode->next = result;
+            result = newNode;
+
+            if (!s1.empty())
+                s1.pop();
+            if (!s2.empty())
+                s2.pop();
+        }
+        return result;
+    }
+
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        //return addTwoNumbers_by_reversing(l1, l2);
+        return addNumbers_using_stack(l1, l2);
     }
 };
-
