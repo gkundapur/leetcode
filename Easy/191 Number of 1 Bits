@@ -21,13 +21,41 @@ The input binary string 1111111111111111111111111111101 has a total of thirty se
 
 class Solution {
 public:
-    int hammingWeight(int n) {
+    // O(n)
+    int bitset1(int n) {
         int count = 0;
 
         while (n) {
-            count += n & 1;
+            count += (n & 1);
             n >>= 1;
         }
         return count;
+    }
+
+    // O(n)
+    int bitset2(int n) {
+        int count = 0;
+        while (n) {
+            count++;
+            n = n & (n-1);
+        }
+        return count;
+    }
+
+    // O(logn)
+    int bitset3(int n) {
+        int count = 0;
+
+        while (n) {
+            count += n%2;
+            n /= 2;
+        }
+        return count;
+    }
+
+    int hammingWeight(int n) {
+        //return bitset1(n);
+        //return bitset2(n);
+        return bitset3(n);
     }
 };
