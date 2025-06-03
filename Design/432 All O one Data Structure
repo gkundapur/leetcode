@@ -1,0 +1,161 @@
+/*
+https://leetcode.com/problems/all-oone-data-structure/description/?envType=problem-list-v2&envId=design
+
+Design a data structure to store the strings' count with the ability to return the strings with minimum and maximum counts.
+
+Implement the AllOne class:
+
+AllOne() Initializes the object of the data structure.
+inc(String key) Increments the count of the string key by 1. If key does not exist in the data structure, insert it with count 1.
+dec(String key) Decrements the count of the string key by 1. If the count of key is 0 after the decrement, remove it from the data structure. It is guaranteed that key exists in the data structure before the decrement.
+getMaxKey() Returns one of the keys with the maximal count. If no element exists, return an empty string "".
+getMinKey() Returns one of the keys with the minimum count. If no element exists, return an empty string "".
+Note that each function must run in O(1) average time complexity.
+
+ 
+
+Example 1:
+
+Input
+["AllOne", "inc", "inc", "getMaxKey", "getMinKey", "inc", "getMaxKey", "getMinKey"]
+[[], ["hello"], ["hello"], [], [], ["leet"], [], []]
+Output
+[null, null, null, "hello", "hello", null, "hello", "leet"]
+
+Explanation
+AllOne allOne = new AllOne();
+allOne.inc("hello");
+allOne.inc("hello");
+allOne.getMaxKey(); // return "hello"
+allOne.getMinKey(); // return "hello"
+allOne.inc("leet");
+allOne.getMaxKey(); // return "hello"
+allOne.getMinKey(); // return "leet"
+ 
+
+Constraints:
+
+1 <= key.length <= 10
+key consists of lowercase English letters.
+It is guaranteed that for each call to dec, key is existing in the data structure.
+At most 5 * 104 calls will be made to inc, dec, getMaxKey, and getMinKey.
+*/
+
+struct Node {
+    int freq;
+    list<string> keys;
+    //unordered_set<string> keys;
+    Node *next;
+    Node *prev;
+
+    Node(int freq) : freq(freq), prev(NULL), next(NULL) {}
+};
+
+class AllOne {
+private:
+    Node *head;
+    Node *tail;
+    unordered_map<string, Node*> mp; // key -> Node address
+
+    void addNodeAfter(Node *node, int freq) {
+        Node *nextNode = node->next;
+        Node *newNode = new Node(freq);
+        newNode->prev = node;
+        newNode->next = nextNode;
+        nextNode->prev = newNode;
+        node->next = newNode;        
+    }
+
+    void removeNode(Node *node) {
+        Node *prev = node->prev;
+        Node *next = node->next;
+        
+        prev->next = next;
+        next->prev = prev;
+        delete node;
+    }
+
+public:
+    AllOne() {
+        head = new Node(0);
+        tail = new Node(0);
+        head->next = tail;
+        tail->prev = head;
+        
+    }
+    
+    // Inserts a new key with freq 1, otherwise increments existing key by 1
+    void inc(string key) {
+        if (mp.find(key) != mp.end()) {
+            // Key exists
+            Node *node = mp[key];
+            int freq = node->freq;
+            
+            // create a new node if next does not exist or freq is not freq+1
+            if (node->next == tail || node->next->freq != freq + 1)
+                addNodeAfter(node, freq+1);
+            node->next->keys.push_front(key); // list
+            //node->next->keys.insert(key);  // set
+            mp[key] = node->next;
+
+            node->keys.remove(key); // list
+            //node->keys.erase(key); // set
+            if (node->keys.empty())
+                removeNode(node);
+        } else {
+            // key doesn't exist, add it the list after the head with freq 1            
+            if (head->next == tail || head->next->freq != 1)
+                addNodeAfter(head, 1);
+            
+            head->next->keys.push_front(key); // list
+            //head->next->keys.insert(key); // set
+            mp[key] = head->next;
+        }
+        
+    }
+        
+    void dec(string key) {
+        if (mp.find(key) == mp.end())
+            return;
+
+        Node *node = mp[key];
+        int freq = node->freq;
+        node->keys.remove(key); // list
+        //node->keys.erase(key); //set
+        if (freq == 1) {
+            // Remove the key from the map if freq is 1
+            mp.erase(key);
+        } else {
+            // Move it t previous freq
+            if (node->prev == head || node->prev->freq != freq -1)
+                addNodeAfter(node->prev, freq-1);
+
+            node->prev->keys.push_front(key); // list
+            //node->prev->keys.insert(key);  // set
+            mp[key] = node->prev;
+
+            // Remove the current node if it has no more keys
+            if (node->keys.empty())
+                removeNode(node);
+        }        
+    }
+    
+    string getMaxKey() {
+        return (tail->prev == head ? "" : tail->prev->keys.front()); // list
+        //return (tail->prev == head ? "" : *(tail->prev->keys.begin())); // set
+    }
+    
+    string getMinKey() {
+        return (head->next == tail ? "" : head->next->keys.front());  //list
+        //return (head->next == tail ? "" : *(head->next->keys.begin()));
+    }
+};
+
+/**
+ * Your AllOne object will be instantiated and called as such:
+ * AllOne* obj = new AllOne();
+ * obj->inc(key);
+ * obj->dec(key);
+ * string param_3 = obj->getMaxKey();
+ * string param_4 = obj->getMinKey();
+ */
