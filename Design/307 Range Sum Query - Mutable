@@ -55,7 +55,7 @@ public:
         int diff = val - vec[index];
         vec[index] = val;
 
-        for (int i = index; i < prefSum.size(); i++)
+        for (int i = index+1; i < prefSum.size(); i++)
             prefSum[i] += diff;
     }
     
