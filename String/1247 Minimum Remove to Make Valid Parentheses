@@ -1,0 +1,100 @@
+/*
+https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/description/
+
+Given a string s of '(' , ')' and lowercase English characters.
+
+Your task is to remove the minimum number of parentheses ( '(' or ')', in any positions ) so that the resulting parentheses string is valid and return any valid string.
+
+Formally, a parentheses string is valid if and only if:
+
+It is the empty string, contains only lowercase characters, or
+It can be written as AB (A concatenated with B), where A and B are valid strings, or
+It can be written as (A), where A is a valid string.
+ 
+
+Example 1:
+
+Input: s = "lee(t(c)o)de)"
+Output: "lee(t(c)o)de"
+Explanation: "lee(t(co)de)" , "lee(t(c)ode)" would also be accepted.
+Example 2:
+
+Input: s = "a)b(c)d"
+Output: "ab(c)d"
+Example 3:
+
+Input: s = "))(("
+Output: ""
+Explanation: An empty string is also valid.
+ 
+
+Constraints:
+
+1 <= s.length <= 105
+s[i] is either '(' , ')', or lowercase English letter.
+*/
+
+class Solution {
+public:
+    string minRemoveToMakeValid1(string s) {
+        int n = s.size();
+        string ans = "";
+        stack<int> st;
+        
+        for (int i = 0; i < n; i++) {
+            if (s[i] != ')' && s[i] != '(') 
+                continue;
+
+            if (s[i] == '(')
+                st.push(i);
+            else {
+                if (st.empty()) {
+                    s[i] = '*';
+                    continue;
+                }
+                st.pop();
+            }
+            
+        }    
+
+        while (st.size()) {
+            s[st.top()] = '*';
+            st.pop();
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (s[i] != '*')
+                ans += s[i];
+        }
+        return ans;
+    }
+
+    string minRemoveToMakeValid2(string s) {
+        stack<int> stack;  // unpaired '(' indices
+
+        for (int i = 0; i < s.length(); ++i) {
+            if (s[i] == '(') {
+                stack.push(i);  // Record the unpaired '(' index.
+            } else if (s[i] == ')') {
+                if (stack.empty())
+                    s[i] = '*';  // Mark the unpaired ')' as '*'.
+                else
+                    stack.pop();  // Find a pair!
+            }
+        }
+
+        // Mark the unpaired '(' as '*'.
+        while (!stack.empty()) {
+            s[stack.top()] = '*';
+            stack.pop();
+        }
+
+        std::erase(s, '*');
+        return s;        
+    }
+
+    string minRemoveToMakeValid(string s) {
+        //return minRemoveToMakeValid1(s);
+        return minRemoveToMakeValid2(s);
+    }
+};
