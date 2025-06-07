@@ -1,0 +1,23 @@
+void insertStack(stack<int> &stack,int num)
+{
+    if(stack.empty())
+        stack.push(num);
+    else
+    {
+            int temp=stack.top();
+            stack.pop();
+            insertStack(stack,num);
+            stack.push(temp);
+    }
+}
+void reverseStack(stack<int> &stack) {
+    if(stack.size()==1)
+        return;
+    else
+    {
+        int temp=stack.top();
+        stack.pop();
+        reverseStack(stack);
+        insertStack(stack, temp);
+    }
+}
