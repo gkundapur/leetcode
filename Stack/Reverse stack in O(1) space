@@ -2,19 +2,16 @@ void insertStack(stack<int> &stack,int num)
 {
     if(stack.empty())
         stack.push(num);
-    else
-    {
-            int temp=stack.top();
-            stack.pop();
-            insertStack(stack,num);
-            stack.push(temp);
+    else {
+        int temp=stack.top();
+        stack.pop();
+        insertStack(stack,num);
+        stack.push(temp);
     }
 }
+
 void reverseStack(stack<int> &stack) {
-    if(stack.size()==1)
-        return;
-    else
-    {
+    if (!stack.empty()) {
         int temp=stack.top();
         stack.pop();
         reverseStack(stack);
