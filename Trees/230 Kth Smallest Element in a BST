@@ -61,8 +61,67 @@ public:
             return -1;
     }
 
+    int kthSmallest_morris(TreeNode* root, int k) {            
+        int count = 0;
+
+        TreeNode *cur = root;
+        while (cur) {
+            if (cur->left == NULL) {
+                count++;
+                if (count == k)
+                    return cur->val;
+                cur = cur->right;
+            } else {
+                TreeNode *pre = cur->left;
+                while (pre->right != NULL && pre->right != cur)
+                    pre = pre->right;
+
+                if (pre->right == NULL) {
+                    pre->right = cur;
+                    cur = cur->left;
+                } else {
+                    pre->right = NULL;
+                    count++;
+                    if (count == k)
+                        return cur->val;
+                    cur = cur->right;
+                }
+            }
+        }
+        return -1;
+    }
+
+     int kthSmallest_stack(TreeNode* root, int k) {
+        // Initialize an empty stack that will be used to perform the in-order traversal.
+        stack<TreeNode*> stk;
+
+        // Continue traversing the tree until we have visited all nodes.
+        while (root || !stk.empty()) {
+            // Go left as long as there is a left child.
+            if (root) {
+                stk.push(root);      // Push the current node onto the stack before moving to left child.
+                root = root->left;   // Move left.
+            } else {
+                // Process the nodes that do not have a left child anymore.
+                root = stk.top();
+                stk.pop();   // Remove the node from the stack.
+                if (--k == 0) {
+                    // If we have reached the k-th smallest, return its value.
+                    return root->val;
+                }
+                // Move to the right child, which will be processed after all its left children.
+                root = root->right;
+            }
+        }
+        // If we are here, it means the k-th smallest element could not be found, return 0.
+        // Although in valid BSTs with at least k nodes, the function will never reach here.
+        return 0;
+    }
+
     int kthSmallest(TreeNode* root, int k) {
         return kthSmallest_1(root, k);
-        //return kthSmallest_2(root, k);         
+        //return kthSmallest_2(root, k);
+        //return kthSmallest_morris(root, k);       
+        return kthSmallest_stack(root, k);
     }
 };
