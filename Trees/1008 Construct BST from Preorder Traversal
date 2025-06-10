@@ -87,11 +87,43 @@ public:
         node->right = bstFromPreorder_3(preorder, parent);
         return node;
     }
-    
+
+    //-----------------------Using Stack-----------------------------
+    TreeNode *bstFromPreorder_stack(vector<int>& preorder) {
+        if (preorder.empty())
+            return NULL;
+
+        TreeNode *root = new TreeNode(preorder[0]);
+        stack<TreeNode *> stk;
+        stk.push(root);
+
+        for (int i = 1; i < preorder.size(); i++) {
+            TreeNode *node = new TreeNode(preorder[i]);            
+
+            if (preorder[i] < stk.top()->val)
+                stk.top()->left = node;
+            else {
+                TreeNode* parent = NULL;
+                while (!stk.empty() && preorder[i] > stk.top()->val) {
+                    parent = stk.top();
+                    stk.pop();
+                }
+
+                parent->right = node;
+            }
+
+            stk.push(node);
+        }
+
+        return root;
+    }
+    //------------------------------------------------------------------
+
     TreeNode* bstFromPreorder(vector<int>& preorder) {
         //return bstFromPreorder_1(preorder);
         //return bstFromPreorder_2(preorder);
-        return bstFromPreorder_3(preorder, INT_MAX);
+        //return bstFromPreorder_3(preorder, INT_MAX);
+        return bstFromPreorder_stack(preorder);
     }
 };
 
