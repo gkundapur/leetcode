@@ -48,10 +48,13 @@ public:
         int maxProfit = 0;
 
         for (int i = 1; i < n; i++) {
-            maxProfit += max(prices[i] - prices[i-1], 0);
+            //maxProfit += max(prices[i] - prices[i-1], 0);
+            if (prices[i] > prices[i-1])
+                maxProfit += prices[i] - prices[i-1];
         }
         return maxProfit;
     }
+
     int maxProfit(vector<int>& prices) {
         //return maxProfit_1(prices);
         return maxProfit_2(prices);
