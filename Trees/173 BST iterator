@@ -45,21 +45,34 @@ class BSTIterator {
 public:
     stack<TreeNode *> st;
 
+    void pushLeft(TreeNode *root) {        
+        while (root) {
+            st.push(root);
+            root = root->left;
+        }
+    }
+
     BSTIterator(TreeNode* root) {
+        pushLeft(root);  // push all left element of tree to stack
+        /*-------------------------------------------------
         TreeNode* cur = root;
         while (cur) {
             st.push(cur);
             cur = cur->left;
         }
-        
+        -------------------------------------------------*/
     }
     
     int next() {
         if (st.empty())
             return -1;
-
+        
         TreeNode* cur = st.top();
         st.pop();
+        if (cur->right)    // if node's right exists, push all left elements of right node
+            pushLeft(cur->right);
+        return cur->val;
+        /*-------------------------------------------------
         int el = cur->val;
 
         cur = cur->right;
@@ -68,7 +81,8 @@ public:
             cur = cur->left;
         }
 
-        return el;       
+        return el;
+        -------------------------------------------------*/
     }
     
     bool hasNext() {
