@@ -41,22 +41,36 @@ A user cannot follow himself.
 */
 
 class Twitter {
+#if 0
     //vector<pair<userId, tweetId>>, recent tweets at end of vector
     vector<pair<int, int>> tweets;
 
     //unordered_map<userId, unordered_map<falloweeId, 0/1> 1 - fallowing, 0 - unfallowing
     unordered_map<int, unordered_map<int, int>> fallowers;
+#endif
+
+    // Maintaining the list of friends the user has.
+    map<int, set<int> > friends_of_User;
+    int curr = 0;
+
+    // To store the tweets sorted as most recent
+    priority_queue<vector<int> > timeline;
+
 
 public:
     Twitter() {
-        
+        friends_of_User.clear();
+        curr = 0;
+        timeline = priority_queue<vector<int> >();        
     }
     
     void postTweet(int userId, int tweetId) {
-        tweets.push_back({userId, tweetId});    
+        //tweets.push_back({userId, tweetId});
+        timeline.push({curr++, tweetId, userId});
     }
     
     vector<int> getNewsFeed(int userId) {
+ #if 0
         vector<int> feeds;
         int count = 0;
 
@@ -67,14 +81,40 @@ public:
             }
         }
         return feeds;
+ #endif
+        vector<int> ans;
+        priority_queue<vector<int>> userTimeline = timeline;
+        int n = 0;
+
+        while (!userTimeline.empty() && n < 10) {
+            auto topTweet = userTimeline.top();
+            userTimeline.pop();
+
+            // Check whether the tweet has been
+            // posted by the user or one of the friends
+            if (topTweet[2] == userId || 
+                friends_of_User[userId].count( topTweet[2])) {
+                ans.push_back(topTweet[1]);
+                n++;
+            }
+        }
+        return ans;
     }
     
     void follow(int followerId, int followeeId) {
-        fallowers[followerId][followeeId] = 1;
+        //fallowers[followerId][followeeId] = 1;
+
+        // Insert the followeeId in the map
+        // corresponding to the followerId
+        friends_of_User[followerId].insert(followeeId);
     }
     
     void unfollow(int followerId, int followeeId) {
-        fallowers[followerId][followeeId] = 0;
+        //fallowers[followerId][followeeId] = 0;
+
+        // Remove the followeeId in the map
+        // corresponding to the followerId
+        friends_of_User[followerId].erase(followeeId);
     }
 };
 
@@ -86,3 +126,48 @@ public:
  * obj->follow(followerId,followeeId);
  * obj->unfollow(followerId,followeeId);
  */
+
+ /*
+ int main() {
+    Twitter obj;
+    int userId, tweetId;
+
+    // Post tweet
+    userId = 1, tweetId = 5;
+    obj.postTweet(userId, tweetId);
+
+    // Get newsfeed
+    vector<int> vec = obj.getNewsFeed(userId);
+    for (int a : vec)
+        cout << a << " ";
+    cout << endl;
+
+    // Follow
+    int follower, followee;
+    follower = 1, followee = 2;
+    obj.follow(follower, followee);
+
+    // Post Tweet
+    userId = 2, tweetId = 6;
+    obj.postTweet(userId, tweetId);
+
+    // Get newsfeed
+    userId = 1;
+    vec = obj.getNewsFeed(userId);
+    for (int a : vec)
+        cout << a << " ";
+    cout << endl;
+
+    // Unfollow
+    follower = 1, followee = 2;
+    obj.unfollow(follower, followee);
+
+    // Get newsfeed
+    vec = obj.getNewsFeed(userId);
+    for (int a : vec)
+        cout << a << " ";
+    cout << endl;
+
+    return 0;
+}
+*/
