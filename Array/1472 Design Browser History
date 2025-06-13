@@ -95,15 +95,6 @@ class BrowserHistory {
     ListNode_t *cur;
 
     void visit_list(string url) {
-        // reset all forward links
-        ListNode_t *temp = cur->next;
-        while (temp) {
-            ListNode_t *deleteNode = temp;
-            temp = temp->next;
-            
-            delete (deleteNode);
-        }
-
         // Create a node for this visit
         ListNode_t *urlNode = new ListNode_t(url);
 
@@ -111,10 +102,8 @@ class BrowserHistory {
         cur->next = urlNode;
         
         cur = urlNode;
-    }
-    
-    
-    
+    } 
+        
     string back_list(int step) {
         
         // Pointer to traverse backward
@@ -144,18 +133,28 @@ class BrowserHistory {
         return cur->url;
     }
 
+    void BrowserHistory_vector(string homepage) {
+        idx = -1;
+        lastidx = -1;
+        visit_vec(homepage);
+    }
+
+    void BrowserHistory_stack(string homepage) {
+        visit_stack(homepage);
+
+        //reset the forward stack
+        forwardStack = stack<string>();
+    }
+
+    void BrowserHistory_list(string homepage) {
+        cur = new ListNode_t(homepage);
+    }
+
 public:
      BrowserHistory(string homepage) {
-        //idx = -1;
-        //lastidx = -1;
-        //visit_vec(homepage);
-        
-        visit_stack(homepage);        
-        
-        //reset the farward stack
-        //forwardStack = staack<string>();
-
-        //cur = new ListNode_t(homepage);
+        //BrowserHistory_vec(homepage);
+        BrowserHistory_stack(homepage);
+        //BrowserHistory_list(homepage);
     }
 
     void visit(string url) {
