@@ -31,12 +31,7 @@ Either x is not zero or n > 0.
 
 class Solution {
 public:
-    double myPow(double x, int n) {
-        /*
-        x^n = (x ^ n/2) ^ 2  // if b is even
-              (x * (x^n/2)^2) // if b is odd
-        T.C: O(logn)
-        */
+    double myPow1(double x, int n) {
         if (n < 0)
             x = 1/x;
 
@@ -50,5 +45,26 @@ public:
             result = x * result;
 
         return result; 
+    }
+
+    double myPow2(double x, long n) {
+        if (n == 0)
+            return 1;
+        if (n < 0)
+            return myPow2(1/x, -n);
+        if (n % 2 == 0)
+            return myPow2(x*x, n/2);
+        else
+            return x * myPow2(x *x, n/2);
+    }
+    
+    double myPow(double x, int n) {
+        /*
+        x^n = (x ^ n/2) ^ 2  // if b is even
+              (x * (x^n/2)^2) // if b is odd
+        T.C: O(logn)
+        */
+        //return myPow1(x, n);
+        return myPow2(x, (long)n);
     }
 };
