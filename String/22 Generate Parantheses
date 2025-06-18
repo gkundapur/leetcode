@@ -54,21 +54,37 @@ public:
             dfs1(left - 1, right + 1, s + "(", result);
     }
 
-    void dfs2(string s, int left, int right, vector<string>& result) {
-        if (left == 0 && right == 0) {
+/************************************************************************************************************/
+                                    s      input
+                                    ""   O-3, C-3
+                                         |      
+                                    "(",O-2,C-3
+                    
+                      "((",O-1,C-3                               "()", O-2,C-2
+
+               "(((",0,3             "(()",1,2                    "()(",1,2
+
+    "((()",0,2      "(()(",0,2    "(())",1,1      "()((",0,2      "()()",1,1
+
+    "((())",0,1     "(()()",0,1   "(())(",0,1       "()(()",0,1   "()()(",0,1
+
+    "((()))",0,0   "(()())",0,0   "(())()",0,0      "()(())",0,0   "()()()", 0,0
+/************************************************************************************************************/                        
+    void dfs2(string s, int open, int close, vector<string>& result) {
+        if (open == 0 && close == 0) {
             result.push_back(s);
             return;
         }
 
-        if (left == right)             
-            dfs2(s + "(", left-1, right, result);
-        else if (left == 0)            
-            dfs2(s + ")", left, right - 1, result);
+        if (open == close)         
+            dfs2(s + "(", open-1, close, result);
+        else if (open == 0)            
+            dfs2(s + ")", open, close - 1, result);
         else if (right == 0)            
-            dfs2(s + "(", left-1, right, result);
+            dfs2(s + "(", open-1, close, result);
         else {
-            dfs2(s+"(", left - 1, right, result);
-            dfs2(s+")", left, right - 1, result);
+            dfs2(s + "(", open - 1, close, result);
+            dfs2(s + ")", open, close - 1, result);
         }
 
     }
