@@ -43,28 +43,41 @@ public:
             dfs(open_count, close_count+1, s + ")", n, result);
     }
 
-    void dfs1(string s, int left, int right, vector<string>& result) {
+    void dfs1(int left, int right, string s, vector<string>& result) {
+        if (left == 0 && right == 0)
+            result.push_back(s);
+
+        if (right != 0)
+            dfs1(left, right - 1, s+")", result);
+
+        if (left != 0) 
+            dfs1(left - 1, right + 1, s + "(", result);
+    }
+
+    void dfs2(string s, int left, int right, vector<string>& result) {
         if (left == 0 && right == 0) {
             result.push_back(s);
             return;
         }
 
         if (left == right)             
-            dfs1(s + "(", left-1, right, result);
+            dfs2(s + "(", left-1, right, result);
         else if (left == 0)            
-            dfs1(s + ")", left, right - 1, result);
+            dfs2(s + ")", left, right - 1, result);
         else if (right == 0)            
-            dfs1(s + "(", left-1, right, result);
+            dfs2(s + "(", left-1, right, result);
         else {
-            dfs1(s+"(", left - 1, right, result);
-            dfs1(s+")", left, right - 1, result);
+            dfs2(s+"(", left - 1, right, result);
+            dfs2(s+")", left, right - 1, result);
         }
 
     }
+
     vector<string> generateParenthesis(int n) {
         vector<string> result;
         //dfs(0, 0, "", n, result);
-        dfs1("", n, n, result);
+        dfs1(n, 0, "", result);
+        //dfs2("", n, n, result);
         return result;        
     }
 };
