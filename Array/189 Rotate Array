@@ -19,8 +19,39 @@ rotate 2 steps to the right: [3,99,-1,-100]
 
 class Solution {
 public:
-    void rotate(vector<int>& nums, int k) {
+    // O(n*k)
+    void right_rotate_1(vector<int>& nums, int k) {
         int n = nums.size();
+        
+        k = k % n;
+
+        while(k--) {
+            int last = nums[n-1];            
+            for (int i = n-1; i > 0; i--)
+                nums[i] = nums[i-1];            
+
+            nums[0] = last;            
+        }
+    }
+
+    void right_rotate_2(vector<int>& nums, int k) {
+        int n = nums.size();
+        vector<int> res;
+
+        k = k % n;
+        for (int i = n-k; i < n; i++)
+            res.push_back(nums[i]);
+
+        for (int i = 0; i < n-k; i++)
+            res.push_back(nums[i]);
+
+        for (int i = 0; i < n; i++)
+            nums[i] = res[i];
+    }
+    
+    void right_rotate_3(vector<int>& nums, int k) {
+        int n = nums.size();
+
         k = k % n;
 
         // reverse the entire array
@@ -29,7 +60,13 @@ public:
         // reverse first k elements
         reverse(nums.begin(), nums.begin()+k);
 
-        // reverse the rest of the elements after k
-        reverse(nums.begin()+k, nums.end());        
+        // reverse rest of the elements after k
+        reverse(nums.begin()+k, nums.end());
+    }
+
+    void rotate(vector<int>& nums, int k) {
+        //right_rotate_1(nums, k);    // gives TLE
+        //right_rotate_2(nums, k);
+        right_rotate_3(nums, k);    
     }
 };
