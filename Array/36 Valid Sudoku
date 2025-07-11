@@ -100,7 +100,7 @@ public:
         return true;
     }
 
-    bool isValidSudoku(vector<vector<char>>& board) {
+    bool validate_sudoku_1(vector<char>>& board) {
         int m = 9; // rows
         int n = 9; // columns
 
@@ -113,6 +113,35 @@ public:
         if (!validate_boxes(board, m, n))
             return false;
 
-        return true;        
+        return true;
+    }
+
+    bool validate_sudoku_2(vector<char>>& board) {
+            unordered_set<char> rows[9];
+        unordered_set<char> cols[9];
+        unordered_set<char> boxes[9];
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.')
+                    continue;
+
+                char val = board[i][j];
+                int boxidx = (i/3) * 3 + (j/3);
+
+                if (rows[i].count(val) || cols[j].count(val) || boxes[boxidx].count(val))
+                    return false;
+
+                rows[i].insert(val);
+                cols[j].insert(val);
+                boxes[boxidx].insert(val);
+            }
+        }
+        return true;
+    }
+
+    bool isValidSudoku(vector<vector<char>>& board) {
+        //return validate_sudoku_1(board);
+        return validate_sudoku_2(board);
     }
 };
