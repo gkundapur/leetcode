@@ -65,16 +65,19 @@ public:
                 int left = cur-1;
                 int right = cur+1;
 
+                // can go left
                 if (left >= 0 && !visited[left]) {
                     q.push(left);
                     visited[left] = true;
                 }
 
+                // can go right
                 if (right < n && !visited[right]) {
                     q.push(right);
                     visited[right] = right;
                 }
 
+                // can go to all indices for arr[cur] stored in map
                 for (int &idx : mp[arr[cur]]) {
                     if (!visited[idx]) {
                         q.push(idx);
@@ -82,7 +85,8 @@ public:
                     }
                 }
 
-                mp.erase(arr[cur]); // delete this num from map as it's already visited
+                // remove the entry once all the entries of mp[arr[cur]] is visited
+                mp.erase(arr[cur]); 
             }
             steps++;
         }
