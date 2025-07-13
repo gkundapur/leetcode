@@ -86,6 +86,6 @@ public:
             }
             steps++;
         }
-        return steps;       
+        return -1;       
     }
 };
