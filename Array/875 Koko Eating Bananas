@@ -37,7 +37,7 @@ public:
     bool canEat(vector<int>& piles, int mid, int h) {
         long hours = 0;
 
-        for (int pile : piles) {
+        for (int &pile : piles) {
             hours += pile/mid;
             if (pile % mid != 0)
                 hours++;
