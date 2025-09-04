@@ -36,8 +36,8 @@ public:
         if (root == NULL)
             return 0;
 
-        int lsum = max(findmaxPathSum(root->left, res), 0);
-        int rsum = max(findmaxPathSum(root->right, res), 0);
+        int lsum = findmaxPathSum(root->left, res);
+        int rsum = findmaxPathSum(root->right, res);
 
         res = max(res, lsum + rsum + root->val);
 
