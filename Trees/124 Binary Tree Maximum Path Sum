@@ -54,7 +54,8 @@ public:
         int full_path = root->val + lsum + rsum;
         int lsum_or_rsum = max(lsum, rsum) + root->val;
 
-        ans = max({ans, root->val, lsum_or_rsum, full_path});
+        //ans = max({ans, root->val, lsum_or_rsum, full_path});
+        ans = max(ans, max(root->val, max(lsum_or_rsum, full_path)));
 
         return max(root->val, lsum_or_rsum);
     }
