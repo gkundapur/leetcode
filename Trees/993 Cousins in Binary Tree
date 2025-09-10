@@ -47,6 +47,9 @@ public:
         if (root == NULL)
             return false;
 
+       if (x == y)
+            return false;
+
         queue<TreeNode *> que;
         que.push(root);
         while (!que.empty()) {
