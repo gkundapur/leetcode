@@ -1,0 +1,145 @@
+/*
+https://leetcode.com/problems/cousins-in-binary-tree/description/
+
+Given the root of a binary tree with unique values and the values of two different nodes of the tree x and y, 
+return true if the nodes corresponding to the values x and y in the tree are cousins, or false otherwise.
+
+Two nodes of a binary tree are cousins if they have the same depth with different parents.
+
+Note that in a binary tree, the root node is at the depth 0, and children of each depth k node are at the depth k + 1.
+
+Example 1:
+Input: root = [1,2,3,4], x = 4, y = 3
+Output: false
+
+Example 2:
+Input: root = [1,2,3,null,4,null,5], x = 5, y = 4
+Output: true
+
+Example 3:
+Input: root = [1,2,3,null,4], x = 2, y = 3
+Output: false
+ 
+
+Constraints:
+The number of nodes in the tree is in the range [2, 100].
+1 <= Node.val <= 100
+Each node has a unique value.
+x != y
+x and y are exist in the tree.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    //--------------------------------------------------------------------
+    bool isCousins_bfs(TreeNode* root, int x, int y) {
+        if (root == NULL)
+            return false;
+
+        queue<TreeNode *> que;
+        que.push(root);
+        while (!que.empty()) {
+            int n = que.size();
+            bool foundx = false;
+            bool foundy = false;
+            while (n--) {
+                TreeNode *cur = que.front();
+                que.pop();
+
+                // check if x and y are siblings
+                if (cur->left && cur->right) {
+                    if ((cur->left->val == x && cur->right->val == y) ||
+                        (cur->left->val == y && cur->right->val == x))
+                        return false;
+                }
+            
+                if (cur->val == x)
+                    foundx = true;
+
+                if (cur->val == y)
+                    foundy = true;
+
+                if (cur->left)
+                    que.push(cur->left);                    
+
+                if (cur->right)
+                    que.push(cur->right);
+            }                    
+
+            // if both x and y are found at same level and not siblings, they are cousins
+            if (foundx && foundy)
+                return true;
+
+            // if one is found and not the other, they are not cousings
+            if (foundx || foundy)
+                return false;
+        }
+        return false;        
+    }
+
+    //--------------------------------------------------------------------
+    int level(TreeNode* root, int value, int lev) {    
+        // base cases
+        if (root == NULL)
+            return 0;
+        
+        if (root->val == value)
+            return lev;
+
+        // Return level if Node is present in left subtree
+        int l = level(root->left, value, lev + 1);
+        if (l != 0)
+            return l;
+
+        // Else search in right subtree
+        return level(root->right, value, lev + 1);
+    }
+
+    bool isSibling(TreeNode* root, int x, int y) {    
+        if (root == NULL)
+            return false;
+
+        if (root->left != NULL && root->right != NULL &&
+            root->left->val == x && root->right->val == y)
+            return true;
+            
+        if (root->left != NULL && root->right != NULL &&
+            root->left->val == y && root->right->val == x)
+            return true;
+            
+        return isSibling(root->left, x, y) ||
+                isSibling(root->right, x, y);
+    }
+
+    bool isCousins_dfs(TreeNode* root, int x, int y) {
+        if (x == y)
+            return false;
+
+        int xlevel = level(root, x, 1);
+        int ylevel = level(root, y, 1);
+        if (xlevel == 0 || ylevel == 0)
+            return false;
+
+        if (xlevel == ylevel && !isSibling(root, x, y))
+            return true;
+        else
+            return false;
+    }
+    //--------------------------------------------------------------------
+
+    bool isCousins(TreeNode* root, int x, int y) {
+        //return isCousins_bfs(root, x, y);
+        return isCousins_dfs(root, x, y);
+    }
+};
