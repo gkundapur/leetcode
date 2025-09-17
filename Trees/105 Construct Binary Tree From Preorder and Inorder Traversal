@@ -77,7 +77,7 @@ public:
 
         // approach 2
         // construct value-to-index map for inorder traversal to avoid searching in inorder array
-        unordered_map<int,int> inorderMap;
+        unordered_map<int,int> inorderMap;  // map = {inorder[i], i}
         for (int i = 0; i < inorder.size(); i++)    
             inorderMap[inorder[i]] = i;
 
