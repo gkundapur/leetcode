@@ -26,6 +26,7 @@ Output: []
  */
 class Solution {
 public:
+    //---------------------------------------------------------------------------------------
     vector<vector<int>> levelOrder_bfs(TreeNode *root) {
         if (root == NULL)
             return {};
@@ -50,6 +51,7 @@ public:
         return result;
     }
 
+    //---------------------------------------------------------------------------------------
     int height(TreeNode *root) {
         if (root == NULL)
             return 0;
@@ -77,6 +79,7 @@ public:
             printCurrentLevel(root, i, result);
     }
 
+    //---------------------------------------------------------------------------------------
     void levelOrder_dfs(TreeNode *root, int level, vector<vector<int>>& result) {
         if (root == NULL)
             return;
@@ -90,6 +93,7 @@ public:
         levelOrder_dfs(root->right, level+1, result);
     }
 
+    //---------------------------------------------------------------------------------------
     vector<vector<int>> levelOrder(TreeNode* root) {
         //return levelOrder_bfs(root);
         vector<vector<int>> result;
