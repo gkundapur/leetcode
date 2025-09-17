@@ -78,6 +78,13 @@ public:
             TreeNode *node = que.front();
             que.pop();
 
+            if (s.find(node->val) != s.end()) {
+                if (node->left)
+                    result.push_back(node->left);
+                if (node->right)
+                    result.push_back(node->right);
+            }
+
             if (node->left) {
                 que.push(node->left);
                 if (s.find(node->left->val) != s.end())
@@ -88,14 +95,7 @@ public:
                 que.push(node->right);
                 if (s.find(node->right->val) != s.end())
                     node->right = NULL;
-            }
-
-            if (s.find(node->val) != s.end()) {
-                if (node->left)
-                    result.push_back(node->left);
-                if (node->right)
-                    result.push_back(node->right);
-            }
+            }            
         }
 
         if (s.find(root->val) == s.end())
