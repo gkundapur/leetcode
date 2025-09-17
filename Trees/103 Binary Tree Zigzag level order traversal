@@ -26,6 +26,7 @@ Output: []
  */
 class Solution {
 public:
+    //---------------------------------------------------------------------------------------
     int height(TreeNode *root) {
         if (root == NULL)
             return 0;
@@ -51,7 +52,8 @@ public:
         if (v.size() != 0)
             result.push_back(v);        
     }
-    
+
+    //---------------------------------------------------------------------------------------
     vector<vector<int>> zigzagLevelOrder_rec(TreeNode *root) {
         if (root == NULL)
             return {};
@@ -66,7 +68,7 @@ public:
         return result;
     }
 
-
+    //---------------------------------------------------------------------------------------
     vector<vector<int>> zigzagLevelOrder_stacks(TreeNode *root) {
         stack<TreeNode*> s1;
         stack<TreeNode*> s2;
@@ -110,7 +112,8 @@ public:
         }
         return result;        
     }
-    
+
+    //---------------------------------------------------------------------------------------
     vector<vector<int>> zigzagLevelOrder_q(TreeNode *root) {
         if (root == NULL)
             return {};
@@ -143,6 +146,7 @@ public:
         return result;
     }
 
+    //---------------------------------------------------------------------------------------
     vector<vector<int>> zigzagLevelOrder_que_stack(TreeNode *root) {
         if (root == NULL)
             return {};
@@ -184,6 +188,7 @@ public:
         return result;
     }
 
+    //---------------------------------------------------------------------------------------
     vector<vector<int>> zigzagLevelOrder_deque(TreeNode *root) {
         if (root == NULL)
             return {};
@@ -221,6 +226,7 @@ public:
         return result;
     }
 
+    //----------------------------------MAIN-----------------------------------------------------
     vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
         //return zigzagLevelOrder_rec(root);
         //return zigzagLevelOrder_stacks(root);
