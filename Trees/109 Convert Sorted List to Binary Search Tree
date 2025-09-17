@@ -49,10 +49,10 @@ public:
     }
 
     TreeNode* sortedListToBST_1(ListNode *head) {
-        if(head == NULL)
+        if(head == NULL) // Empty list
             return NULL;
         
-        if(head->next == NULL)
+        if(head->next == NULL)  // list with only one node
             return new TreeNode(head->val);
 
         ListNode *mid, *prevMid;
