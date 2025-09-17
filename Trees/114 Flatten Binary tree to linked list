@@ -29,6 +29,7 @@ Output: [0]
 class Solution {
     TreeNode *prevNode = NULL;
 public:
+    //----------------------------------------------------------------------------------------------------------------------------
     void flatten_rec(TreeNode* root) {
         if (root == NULL)
             return;
@@ -53,6 +54,7 @@ public:
         cur->right = right;
     }
 
+    //----------------------------------------------------------------------------------------------------------------------------
     void flatten_iterative_using_stack(TreeNode *root) {
         if (root == NULL)
             return;
@@ -72,6 +74,7 @@ public:
         }
     }
 
+    //----------------------------------------------------------------------------------------------------------------------------
     void flatten_reverse_postorder(TreeNode *root) {
         if (root == NULL)
             return;
@@ -83,6 +86,7 @@ public:
         prevNode = root;
     }
 
+    //----------------------------------------------------------------------------------------------------------------------------
     void flatten_morris(TreeNode *root) {
         while (root) {
             if (root->left) {
@@ -97,6 +101,7 @@ public:
         }
     }
 
+    //----------------------------------------------------------------------------------------------------------------------------
     void flatten(TreeNode* root) {
         //flatten_rec(root);
         //flatten_iterative_using_stack(root);
