@@ -27,6 +27,7 @@ Output: 5
  */
 class Solution {
 public:
+    //-----------------------------------------------------------------------------------------------------------------------------
     int minDepth_bfs(TreeNode *root) {
         if (root == NULL)
             return 0;
@@ -56,6 +57,7 @@ public:
         return -1;
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------------
     int minDepth_dfs(TreeNode *root) {
         if (root == NULL)
             return 0;
@@ -69,6 +71,7 @@ public:
         return 1 + min(leftDepth, rightDepth);        
     }
 
+    //----------------------------------------MAIN---------------------------------------------------------------------------------
     int minDepth(TreeNode* root) {
         return minDepth_bfs(root);
         //return minDepth_dfs(root);
