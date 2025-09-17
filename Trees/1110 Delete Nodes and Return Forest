@@ -27,6 +27,7 @@ Output: [[1,2,4]]
  */
 class Solution {
 public:
+    //-----------------------------------------------------------------------------------------------------------------------------
     TreeNode *delNodes_utility(TreeNode *root, unordered_set<int>& s, vector<TreeNode *>& result) {
         if (root == NULL)
             return NULL;
@@ -63,6 +64,7 @@ public:
         return result;
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------------
     vector<TreeNode *> delNodes_bfs(TreeNode* root, vector<int>& to_delete) {
         if (root == NULL)
             return {};
@@ -102,6 +104,7 @@ public:
         return result;
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------------
     vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
         //return delNodes_dfs(root, to_delete);
         return delNodes_bfs(root, to_delete);
