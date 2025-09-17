@@ -22,6 +22,7 @@ Output: [-1]
  */
 class Solution {
 public:
+    //-----------------------------------------------------------------------------------------------------------------------------
     // O(n^2) for searching each preorder[postIdx] in inorder array
     TreeNode *construct(vector<int>& inorder, vector<int>& postorder, int inStart, int inEnd, int& postIdx) {
         if (inStart > inEnd)
@@ -45,6 +46,8 @@ public:
         return root;
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------------
+    // O(n) using map
     TreeNode *construct_using_map(unordered_map<int, int>& inorderMap, vector<int>& postorder, int inStart, int inEnd, int& postIdx) {
         if (inStart > inEnd)
             return NULL;
@@ -62,6 +65,7 @@ public:
         return root;
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------------
     TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
         int postIdx = postorder.size()-1;
 
@@ -70,7 +74,7 @@ public:
 
         // approach 2
         // construct value-to-index for inorder traversal
-        unordered_map<int, int> inorderMap;
+        unordered_map<int, int> inorderMap; // map = {inorder[i], i}
         for (int i = 0; i < inorder.size(); i++)
             inorderMap[inorder[i]] = i;
         return construct_using_map(inorderMap, postorder, 0, inorder.size()-1, postIdx);        
