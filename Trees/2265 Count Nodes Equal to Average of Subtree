@@ -35,6 +35,7 @@ Explanation: For the node with value 1: The average of its subtree is 1 / 1 = 1.
  */
 class Solution {
 public:
+    //-------------------------------------------------------------------------------------------------------
     int findsum(TreeNode *root, int& count) {
         if (root == NULL)
             return 0;
@@ -57,6 +58,7 @@ public:
         averageOfSubtree_bruteforce(root->right, result);        
     }
 
+    //-------------------------------------------------------------------------------------------------------
     pair<int/*sum*/, int/*count*/> averageOfSubtree_efficient(TreeNode *root, int& result) {
         if (root == NULL)
             return {0, 0};
@@ -74,6 +76,7 @@ public:
         return {totalSum, totalCount};
     }
 
+    //-------------------------------------------------------------------------------------------------------
     int averageOfSubtree(TreeNode* root) {
         int result = 0;
 
