@@ -37,6 +37,7 @@ Explanation: At minute 0, the only node in the tree is infected so we return 0.
  */
 class Solution {
 public:
+    //-------------------------------------------------------------------------------------------------------
     void constuct_child_parent_map(TreeNode *root, int start, TreeNode *& startNode,
                         unordered_map<TreeNode *, TreeNode *>& umParent) {
         queue<TreeNode *> que;
@@ -106,6 +107,7 @@ public:
         return total_time;
     }
 
+    //-------------------------------------------------------------------------------------------------------
     int amountOfTime_dfs(TreeNode *root, int start, int &result) {
         if (root == NULL)
             return 0;
@@ -126,6 +128,7 @@ public:
         return 0; // not reach here        
     }
 
+    //-------------------------------------------------------------------------------------------------------
     int amountOfTime(TreeNode* root, int start) {
         //return amountOfTime_bfs(root, start);
         int result = INT_MIN;
