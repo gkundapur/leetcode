@@ -23,6 +23,7 @@ Output: 3
  */
 class Solution {
 public:
+    //-------------------------------------------------------------------------------------------------------
     void inorder(TreeNode* root, vector<int>& v) {
         if (root) {
             inorder(root->left, v);
@@ -37,6 +38,7 @@ public:
         return v[k-1];
     }
 
+    //-------------------------------------------------------------------------------------------------------
     TreeNode* dfs(TreeNode* root, int k, int& count) {
         if (root == NULL)
             return NULL;
@@ -61,6 +63,7 @@ public:
             return -1;
     }
 
+    //-------------------------------------------------------------------------------------------------------
     int kthSmallest_morris(TreeNode* root, int k) {            
         int count = 0;
 
@@ -91,7 +94,8 @@ public:
         return -1;
     }
 
-     int kthSmallest_stack(TreeNode* root, int k) {
+    //-------------------------------------------------------------------------------------------------------
+    int kthSmallest_stack(TreeNode* root, int k) {
         // Initialize an empty stack that will be used to perform the in-order traversal.
         stack<TreeNode*> stk;
 
@@ -118,6 +122,7 @@ public:
         return 0;
     }
 
+    //-------------------------------------------------------------------------------------------------------
     int kthSmallest(TreeNode* root, int k) {
         return kthSmallest_1(root, k);
         //return kthSmallest_2(root, k);
