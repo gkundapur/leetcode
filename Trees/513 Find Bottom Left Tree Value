@@ -25,7 +25,7 @@ class Solution {
     int max_depth; // for dfs
     int bottomLeft; 
 public:
-
+    //--------------------------------------------------------------------------------------------------------------
     // left to right level by level
     int findBottomLeftValue_bfs(TreeNode *root) {
         if (root == NULL)
@@ -50,6 +50,7 @@ public:
         return bottomLeftValue;
     }
 
+    //--------------------------------------------------------------------------------------------------------------
     // right to left level by level - last node is the bottom left
     int findBottomLeftValue_bfs1(TreeNode *root) {
         if (root == NULL)
@@ -72,6 +73,7 @@ public:
         return node->val;
     }
 
+    //--------------------------------------------------------------------------------------------------------------
     void findBottomLeftValue_dfs(TreeNode *root, int cur_depth) {
         if (root == NULL)
             return;
@@ -85,6 +87,7 @@ public:
         findBottomLeftValue_dfs(root->right, cur_depth+1);
     }
 
+    //--------------------------------------------------------------------------------------------------------------
     int findBottomLeftValue(TreeNode* root) {
         //return findBottomLeftValue_bfs(root);
         return findBottomLeftValue_bfs1(root);
