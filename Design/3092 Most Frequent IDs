@@ -61,7 +61,7 @@ public:
             id_freq_map[id] += f;
             pq.push({id_freq_map[id], id});
 
-            // remove state entries
+            // remove stale entries
             while (id_freq_map[pq.top().second] != pq.top().first)
                 pq.pop();
 
