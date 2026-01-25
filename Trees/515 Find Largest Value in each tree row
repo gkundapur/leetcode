@@ -52,17 +52,17 @@ public:
     }
 
     //---------------------------------------------------------------------------------------------------
-    void largestValues_dfs(TreeNode *root, int row, vector<int>& result) {
+    void largestValues_dfs(TreeNode *root, int depth, vector<int>& result) {
         if (root == NULL)
             return;
 
-        if (row == result.size()) // root is max at row 0
+        if (depth == result.size()) // root is max at row 0
             result.push_back(root->val);
         else 
-            result[row] = max(result[row], root->val);
+            result[depth] = max(result[depth], root->val);
 
-        largestValues_dfs(root->left, row+1, result);
-        largestValues_dfs(root->right, row+1, result);
+        largestValues_dfs(root->left, depth+1, result);
+        largestValues_dfs(root->right, depth+1, result);
     }
 
     //---------------------------------------------------------------------------------------------------
