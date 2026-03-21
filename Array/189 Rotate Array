@@ -34,6 +34,20 @@ public:
         }
     }
 
+void right_rotate_4(vector<int>& nums, int k) {
+        int n = nums.size();
+        k = k % n;
+
+        cout << "n = " << n << endl;
+        for (int i = 0; i < k; i++) {
+            int temp = nums[n-1];
+            for (int j = n-2; j >= 0; j--)
+                nums[j+1] = nums[j];
+
+            nums[0] = temp;
+        }
+    }
+
     void right_rotate_2(vector<int>& nums, int k) {
         int n = nums.size();
         vector<int> res;
@@ -67,6 +81,7 @@ public:
     void rotate(vector<int>& nums, int k) {
         //right_rotate_1(nums, k);    // gives TLE
         //right_rotate_2(nums, k);
-        right_rotate_3(nums, k);    
+        right_rotate_3(nums, k);
+        right_rotate_4(nums, k);
     }
 };
