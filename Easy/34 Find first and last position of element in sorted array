@@ -92,6 +92,23 @@ public:
         return last;
     }
 
+   vector<int> searchRange_using_bound(vector<int>& nums, int target) {        
+        int n = nums.size();
+
+        // return the index first number greater than or equal to k
+        int first = lower_bound(nums.begin(), nums.end(), target) - nums.begin();
+
+        // return the index of first number greater than k
+        int last = upper_bound(nums.begin(), nums.end(), target) - nums.begin() - 1;
+
+        if (first == n || nums[first] != target) {
+            first = -1;
+            last = -1;
+        }
+
+        return {first, last};
+    }
+
     vector<int> searchRange_BS(vector<int>& nums, int target) {
         int first = find_First(nums, target);
         int last = find_Last(nums, target);
@@ -100,6 +117,7 @@ public:
     }
     vector<int> searchRange(vector<int>& nums, int target) {
         //return searchRange_BF(nums, target);
+        //searchRange_using_bound(nums, target);
         return searchRange_BS(nums, target);
         
     }
