@@ -35,7 +35,26 @@ piles.length <= h <= 109
 
 class Solution {
 public:
-    bool canEat(vector<int>& piles, int mid, int h) {
+
+
+   int minEatingSpeed_BF(vector<int>& piles, int h) {
+        int l = 1;
+        int r = *max_element(piles.begin(), piles.end());
+        int ans = r;
+        for (int k = l; k <= r; k++) {
+            int hours = 0;
+            for (int pile : piles) 
+                hours += (pile + k - 1) / k; // or hours += pile/k; if (pile % mid)  hours++
+            
+            if (hours <= h) {
+                ans =  k;
+                break;
+            }            
+        }
+        return ans;
+    }
+
+   bool canEat(vector<int>& piles, int mid, int h) {
         long hours = 0;
 
         for (int &pile : piles) {
@@ -46,7 +65,7 @@ public:
         return hours <= h;
     }
 
-    int minEatingSpeed(vector<int>& piles, int h) {
+     int minEatingSpeed_BS(vector<int>& piles, int h) {
         int l = 1;
         int r = *max_element(piles.begin(), piles.end());
         int ans = r;
@@ -58,6 +77,10 @@ public:
             } else
                 l = mid+1;
         }
-        return ans;        
+        return ans;
     }
+
+    int minEatingSpeed(vector<int>& piles, int h) {
+        //return minEatingSpeed_BF(piles,  h); // 10^9.10^4 = 10^14 gives TLE
+        return minEatingSpeed_BS(piles, h);
 };
