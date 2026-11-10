@@ -16,22 +16,42 @@ Output: 1
 
 class Solution {
 public:
-    int maxArea(vector<int>& height) {
+    int maxArea_opt(vector<int>& height) {
         int n = height.size();        
-        int l = 0;
-        int r = n - 1;
+        int i = 0;
+        int j = n - 1;
         int max_area = 0;
 
-        while (l < r) {
-            int h = min(height[l], height[r]);
-            int w = r - l;
+        while (i < j) {
+            int h = min(height[i], height[j]);
+            int w = j - i;
             int area = h * w;
             max_area = max(max_area, area);
-            if (height[l] < height[r])
-                l++;
+            if (height[i] > height[j])
+                j--;
             else
-                r--;
+                i++;
         }
         return max_area;        
     }
+
+    int maxArea_BF(vector<int>& height) {
+        int n = height.size();
+        int maxArea = 0;
+
+        for (int left = 0; left < n - 1; left++) {
+            for (int right = left + 1; right < n; right++) {
+                int h = min(height[left], height[right]);
+                int w = right - left;
+                int Area = h * w;
+                maxArea = max(maxArea, Area);
+            }
+        }
+        return maxArea;
+    }
+    int maxArea(vector<int>& height) {
+        return maxArea_BF(height);
+        //return maxArea_opt(height);        
+    }
 };
+
