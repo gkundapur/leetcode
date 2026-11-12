@@ -82,10 +82,28 @@ public:
         return count;
     }
 
+    int subarraySum4(vector<int>& nums, int k) {
+        int n = nums.size();
+        int count = 0;
+        int prefixSum = 0;
+        unordered_map<int, int> um; // {prefixsum, freq}
+        um[0] = 1;
+
+        for (int num : nums) {
+            prefixSum += num;            
+
+            if (um.contains(prefixSum - k))
+                count += um[prefixSum - k];
+            um[prefixSum]++;
+        }
+        return count;
+    }
+
     int subarraySum(vector<int>& nums, int k) {
         //return subarraySum1(nums, k);
         //return subarraySum2(nums, k);
-        return subarraySum3(nums, k);
+        //return subarraySum3(nums, k);
+        return subarraySum4(nums, k);
         
     }
 };
